@@ -84,7 +84,7 @@ uint16_t flags = 0;
 String target_url = "http://cosytech.net";
 
 void nfc_was_read(){
-  Serial.println(F("Tag was read"));
+  Serial.println(F("Tag was read coke_demo"));
   digitalWrite(led, LOW);
   delay(100);
   digitalWrite(led, HIGH);
