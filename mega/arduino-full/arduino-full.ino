@@ -80,7 +80,8 @@ String target_url = "http://google.com";
 const size_t msg_len = 128;
 char msg[msg_len] = "CosyTech Default Tag\0";
 
-long fnc = 0;
+long temp = 0;
+unsigned int fnc = 0;
 
 void node_update() {
   print_free_memory();
@@ -104,9 +105,10 @@ void node_update() {
       Serial.println((char*)i.value());
     }
     */
-    fnc = root["fnc"];
+    temp = root["fnc"];
+    fnc = (unsigned int) temp;
     strncpy(msg,root["pay"], msg_len);
-    write_ndef_to_nfc((int) fnc, msg, msg_len); // This cast is BAAAAAAAAAAD
+    write_ndef_to_nfc(fnc, msg, msg_len); // This cast is BAAAAAAAAAAD
     Serial.println("New update completed.");
   }
 }
@@ -211,7 +213,7 @@ void nfc_irq(){
   attachInterrupt(IRQ, RF430_Interrupt, FALLING); 
 }
 
-void write_ndef_to_nfc(int fnc, const char* payload, const size_t payload_len){
+void write_ndef_to_nfc(const unsigned int fnc, char* payload, const size_t payload_len){
   Serial.println("Writing NDEF to NFC...");
   NdefRecord records[1];
 
@@ -222,7 +224,7 @@ void write_ndef_to_nfc(int fnc, const char* payload, const size_t payload_len){
       break;
     case 2:
       Serial.println("Writing url"); // NOT CURRENTLY WORKING < AFRAID I FUCK UP
-      //records[0].createUri(payload);
+      records[0].createUri((String)payload);
       break;
     default:
       Serial.println("Writing borked!");
