@@ -6,19 +6,24 @@
 *  \____\___/|___/\__, ||_|\___|\___|_| |_|
 *                 |___/                    
 *
-* CosyTech Skunkworks - Active NFC Only
+* CosyTech Skunkworks - Active NFC Full Proof of concept
 * By Joakim Skjefstad (joakim@cosytech.net)
 * Based on example code by Ten Wong
+* Requires Arduino Mega 2560 due to SRAM
 *
 * Dependencies:
 * https://github.com/awong1900/RF430CL330H_Shield 
 * 
-* Pins used:
-* I2C - A4, A5
+* Pins used by NFC Chip:
+* I2C - SDA pin 20, SCL pin 21
 * /RST - D4
 * INT0 - D3
 * VCC - 3.3v
 * GND - GND
+* Pins used by Ethernet Shield:
+*
+*
+*
 */
 
 
@@ -66,6 +71,19 @@
 
 #include <Wire.h>
 
+#include <MemoryFree.h>
+
+#include <SPI.h>
+#include <Ethernet.h>
+
+#include <RestClient.h>
+
+#include <JsonParser.h>
+using namespace ArduinoJson::Parser;
+JsonParser<32> parser;
+
+#include <SimpleTimer.h>
+
 #include <RF430CL330H_Shield.h>
 #include <NdefMessage.h>
 #include <NdefRecord.h>
@@ -77,11 +95,60 @@
 
 const int led = 13;
 
+SimpleTimer timer;
+
 RF430CL330H_Shield nfc(IRQ, RESET);
 volatile byte into_fired = 0;
 uint16_t flags = 0;
 
-String target_url = "http://cosytech.net";
+RestClient client = RestClient("royrvik.org", 8102);
+
+//EthernetClient client;
+//static uint8_t mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+//static uint8_t ip[] = { 192, 168, 0, 100 }; // Static
+
+char node_server[] = "royrvik.org"; // Uses DNS
+
+String target_url = "http://google.com";
+
+const size_t msg_len = 128;
+char msg[msg_len] = "CosyTech Default Tag\0";
+
+long fnc = 0;
+
+void node_update() {
+  print_free_memory();
+  String response = "";
+  int statusCode = client.get("/nodes/1/", &response);
+  Serial.print(F("REST GET: "));
+  Serial.println(response);
+
+  char charBuf[128];
+  response.toCharArray(charBuf, 128);
+  JsonObject root = parser.parse(charBuf);
+  if (!root.success())
+  {
+      // Parsing fail: could be an invalid JSON, or too many tokens
+    Serial.println("Parsing failed, invalid JSON or too many tokens!");
+  } else {
+    /*
+    for (JsonObjectIterator i=root.begin(); i!=root.end(); ++i)
+    {
+      Serial.println(i.key());
+      Serial.println((char*)i.value());
+    }
+    */
+    fnc = root["fnc"];
+    strncpy(msg,root["pay"], msg_len);
+    write_ndef_to_nfc((int) fnc, msg, msg_len); // This cast is BAAAAAAAAAAD
+    Serial.println("New update completed.");
+  }
+}
+
+void print_free_memory(){
+  Serial.print(F("Free SRAM: "));
+  Serial.println(freeMemory());
+}
 
 void nfc_was_read(){
   Serial.println(F("Tag was read coke_demo"));
@@ -104,25 +171,27 @@ void shutdown(){
 }
 
 void setup(void) 
-{
-  
+{ 
   Serial.begin(BAUDRATE);
   Serial.println(F("CosyTech Active NFC started"));
+  
+  client.dhcp();
+  //delay(1000);
+
   nfc.begin();
-  NdefRecord records[1];
-  records[0].createUri(target_url);
-  NdefMessage msg(records, sizeof(records)/sizeof(NdefRecord));
-  uint16_t msg_length = msg.getByteArrayLength();
-  byte message[msg_length];
-  msg.toByteArray(message);
-  nfc.Write_NDEFmessage(message, msg_length);
+
+
+  write_ndef_to_nfc(1, msg, msg_len);
+
   nfc_irq();
+  timer.setInterval(1000, node_update);
 }
 
 void loop(void) 
 {
   attachInterrupt(IRQ, RF430_Interrupt, FALLING);
-  
+  timer.run();
+
   if(into_fired)
   {
     nfc_irq();
@@ -167,3 +236,30 @@ void nfc_irq(){
   attachInterrupt(IRQ, RF430_Interrupt, FALLING); 
 }
 
+void write_ndef_to_nfc(int fnc, const char* payload, const size_t payload_len){
+  Serial.println("Writing NDEF to NFC...");
+  NdefRecord records[1];
+
+  switch (fnc){
+    case 1:
+      Serial.println("Writing text");
+      records[0].createText((byte*)payload, payload_len, ENGLISH, true);
+      break;
+    case 2:
+      Serial.println("Writing url");
+      records[0].createUri(payload);
+      break;
+    default:
+      Serial.println("Writing borked!");
+      return;
+  }
+
+  
+
+  
+  NdefMessage msg(records, sizeof(records)/sizeof(NdefRecord));
+  uint16_t msg_length = msg.getByteArrayLength();
+  byte message[msg_length];
+  msg.toByteArray(message);
+  nfc.Write_NDEFmessage(message, msg_length);
+}
