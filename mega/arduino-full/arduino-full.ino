@@ -26,48 +26,12 @@
 *
 */
 
-
 /* Copyright 2013-2014 Ten Wong, wangtengoo7@gmail.com  
 *  https://github.com/awong1900/RF430CL330H_Shield 
 *  More info : http://www.elecfreaks.com
 */
 //the I2C part of this code is borrowed from Adafruit_NFCShield_I2C
 //link to original https://github.com/adafruit/Adafruit_NFCShield_I2C
-
-//  RF430 User Address Map
-//  -----------------------------------------
-//  Address     | Size  | Description       |
-//  -----------------------------------------
-//  0xFFFE      | 2B    | Control Register  |
-//  0xFFFC      | 2B    | Status Register   |
-//  0xFFFA      | 2B    | Interrupt Enable  |
-//  0xFFF8      | 2B    | Interrupt Flags   |
-//  0xFFF6      | 2B    | CRC Result        |
-//  0xFFF4      | 2B    | CRC Length        |
-//  0xFFF2      | 2B    | CRC Start Address |
-//  0xFFF0      | 2B    | Comm WD Ctrl Reg  |
-//  -----------------------------------------
-//  0x0000 -    | 2kB   | NDEF App Memory   |
-//    0x07FF    |       |                   |
-//
-//
-//
-//                                /|\  /|\    (Host/Tester)
-//                   RF430        10k  10k     Arduino 2560
-//                  (Slave)        |    |        Master
-//             _________________   |    |   _________________
-//            |              SDA|<-|----+->|P20              |
-//            |                 |  | I2C   |                 |
-//            |              SCL|<-+------>|P21              |
-//            |                 |          |                 |
-//      GND<--|E(2-0)       /RST|<---------|P4               |
-//            |             INTO|--------->|P3(INT1)         |
-//            |                 |          |                 |
-//            |                 |          |                 |
-//            |                 |          |                 |
-//            |_________________|          |_________________|
-//
-//******************************************************************************
 
 #include <Wire.h>
 
@@ -93,7 +57,9 @@ JsonParser<32> parser;
 
 #define BAUDRATE 115200
 
-const int led = 13;
+const int led = 12;           // PulseLed
+int brightness = 0;    // how bright the LED is
+int fadeAmount = 5;    // how many points to fade the LED by
 
 SimpleTimer timer;
 
@@ -152,16 +118,9 @@ void print_free_memory(){
 
 void nfc_was_read(){
   Serial.println(F("Tag was read coke_demo"));
-  digitalWrite(led, LOW);
-  delay(100);
-  digitalWrite(led, HIGH);
-  delay(1000);
 }
 void nfc_was_written(){
   Serial.println(F("Tag was written"));
-  digitalWrite(led, LOW);
-  delay(200);
-  digitalWrite(led, HIGH);
 }
 
 void shutdown(){
@@ -172,6 +131,7 @@ void shutdown(){
 
 void setup(void) 
 { 
+  pinMode(led, OUTPUT);   // sets the pin as output
   Serial.begin(BAUDRATE);
   Serial.println(F("CosyTech Active NFC started"));
   
@@ -187,13 +147,28 @@ void setup(void)
   timer.setInterval(1000, node_update);
 }
 
+void pulse_led(){
+  Serial.println("Pulsing LED");
+  for (int i = 0; i < 255; i++){
+    analogWrite(led, i);
+
+  }
+  for (int i = 255; i > 0; i--){
+    analogWrite(led, i);
+    delay(1);
+  }
+}
+
 void loop(void) 
 {
   attachInterrupt(IRQ, RF430_Interrupt, FALLING);
   timer.run();
 
+  
+
   if(into_fired)
   {
+     pulse_led();
     nfc_irq();
   }
 
@@ -209,7 +184,7 @@ void RF430_Interrupt()
 void nfc_irq(){
   //clear control reg to disable RF
   nfc.Write_Register(CONTROL_REG, nfc.Read_Register(CONTROL_REG) & ~RF_ENABLE); 
-  delay(750);
+  delay(250);
 
   //read the flag register to check if a read or write occurred
   flags = nfc.Read_Register(INT_FLAG_REG); 
@@ -246,17 +221,14 @@ void write_ndef_to_nfc(int fnc, const char* payload, const size_t payload_len){
       records[0].createText((byte*)payload, payload_len, ENGLISH, true);
       break;
     case 2:
-      Serial.println("Writing url");
-      records[0].createUri(payload);
+      Serial.println("Writing url"); // NOT CURRENTLY WORKING < AFRAID I FUCK UP
+      //records[0].createUri(payload);
       break;
     default:
       Serial.println("Writing borked!");
       return;
   }
 
-  
-
-  
   NdefMessage msg(records, sizeof(records)/sizeof(NdefRecord));
   uint16_t msg_length = msg.getByteArrayLength();
   byte message[msg_length];
