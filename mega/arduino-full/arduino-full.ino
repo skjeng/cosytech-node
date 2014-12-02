@@ -1,10 +1,10 @@
 /*
-*   ____               _____         _     
-*  / ___|___  ___ _   |_   _|__  ___| |__  
-* | |   / _ \/ __| | | || |/ _ \/ __| '_ \ 
+*   ____               _____         _
+*  / ___|___  ___ _   |_   _|__  ___| |__
+* | |   / _ \/ __| | | || |/ _ \/ __| '_ \
 * | |__| (_) \__ \ |_| || |  __/ (__| | | |
 *  \____\___/|___/\__, ||_|\___|\___|_| |_|
-*                 |___/                    
+*                 |___/
 *
 * CosyTech Skunkworks - Active NFC Full Proof of concept
 * By Joakim Skjefstad (joakim@cosytech.net)
@@ -12,8 +12,8 @@
 * Requires Arduino Mega 2560 due to SRAM
 *
 * Dependencies:
-* https://github.com/awong1900/RF430CL330H_Shield 
-* 
+* https://github.com/awong1900/RF430CL330H_Shield
+*
 * Pins used by NFC Chip:
 * I2C - SDA pin 20, SCL pin 21
 * /RST - D4
@@ -26,8 +26,8 @@
 *
 */
 
-/* Copyright 2013-2014 Ten Wong, wangtengoo7@gmail.com  
-*  https://github.com/awong1900/RF430CL330H_Shield 
+/* Copyright 2013-2014 Ten Wong, wangtengoo7@gmail.com
+*  https://github.com/awong1900/RF430CL330H_Shield
 *  More info : http://www.elecfreaks.com
 */
 //the I2C part of this code is borrowed from Adafruit_NFCShield_I2C
@@ -60,6 +60,7 @@ JsonParser<32> parser;
 const int led = 12;           // PulseLed
 int brightness = 0;    // how bright the LED is
 int fadeAmount = 5;    // how many points to fade the LED by
+uint8_t int_rf_busy = 0;
 
 SimpleTimer timer;
 
@@ -131,12 +132,12 @@ void shutdown(){
     ;
 }
 
-void setup(void) 
-{ 
+void setup(void)
+{
   pinMode(led, OUTPUT);   // sets the pin as output
   Serial.begin(BAUDRATE);
   Serial.println(F("CosyTech Active NFC started"));
-  
+
   client.dhcp();
   //delay(1000);
 
@@ -161,23 +162,27 @@ void pulse_led(){
   }
 }
 
-void loop(void) 
+void loop(void)
 {
   attachInterrupt(IRQ, RF430_Interrupt, FALLING);
   timer.run();
 
-  
+  // Generate the RF_BUSY interrupt
+  if(nfc.Read_Register((STATUS_REG) & RF_BUSY) && int_rf_busy) {
+    int_rf_busy ^= 1;
+    pulse_led();
+  }
 
   if(into_fired)
   {
-     pulse_led();
+    // pulse_led();
     nfc_irq();
   }
 
   delay(100);
 }
 
-void RF430_Interrupt()            
+void RF430_Interrupt()
 {
   into_fired = 1;
   detachInterrupt(IRQ);//cancel interrupt
@@ -185,14 +190,14 @@ void RF430_Interrupt()
 
 void nfc_irq(){
   //clear control reg to disable RF
-  nfc.Write_Register(CONTROL_REG, nfc.Read_Register(CONTROL_REG) & ~RF_ENABLE); 
+  nfc.Write_Register(CONTROL_REG, nfc.Read_Register(CONTROL_REG) & ~RF_ENABLE);
   delay(250);
 
   //read the flag register to check if a read or write occurred
-  flags = nfc.Read_Register(INT_FLAG_REG); 
+  flags = nfc.Read_Register(INT_FLAG_REG);
 
   //ACK the flags to clear
-  nfc.Write_Register(INT_FLAG_REG, EOW_INT_FLAG + EOR_INT_FLAG); 
+  nfc.Write_Register(INT_FLAG_REG, EOW_INT_FLAG + EOR_INT_FLAG);
 
   if(flags & EOW_INT_FLAG)      //check if the tag was written
   {
@@ -207,10 +212,10 @@ void nfc_irq(){
   into_fired = 0; //we have serviced INT1
 
   //Configure INTO pin for active low and re-enable RF
-  nfc.Write_Register(CONTROL_REG, nfc.Read_Register(CONTROL_REG) | RF_ENABLE); 
+  nfc.Write_Register(CONTROL_REG, nfc.Read_Register(CONTROL_REG) | RF_ENABLE);
 
   //re-enable INTO
-  attachInterrupt(IRQ, RF430_Interrupt, FALLING); 
+  attachInterrupt(IRQ, RF430_Interrupt, FALLING);
 }
 
 void write_ndef_to_nfc(const unsigned int fnc, char* payload, const size_t payload_len){
