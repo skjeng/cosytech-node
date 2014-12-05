@@ -120,10 +120,10 @@ void print_free_memory(){
 }
 
 void nfc_was_read(){
-  Serial.println(F("Tag was read coke_demo"));
+  Serial.println(F("INT0: Tag was read"));
 }
 void nfc_was_written(){
-  Serial.println(F("Tag was written"));
+  Serial.println(F("INT0: Tag was written"));
 }
 
 void shutdown(){
@@ -147,7 +147,7 @@ void setup(void)
   write_ndef_to_nfc(1, msg, msg_len);
 
   nfc_irq();
-  timer.setInterval(1000, node_update);
+  timer.setInterval(5000, node_update);
 }
 
 void pulse_led(){
@@ -167,15 +167,16 @@ void loop(void)
   attachInterrupt(IRQ, RF430_Interrupt, FALLING);
   timer.run();
 
-  // Generate the RF_BUSY interrupt
-  if(nfc.Read_Register((STATUS_REG) & RF_BUSY) && int_rf_busy) {
-    int_rf_busy ^= 1;
+  // Generate the RF_BUSY interrupt, keep high until reset by READ_END
+  if((nfc.Read_Register(STATUS_REG) & RF_BUSY) && !int_rf_busy) {
+    int_rf_busy = 1;
     pulse_led();
+    Serial.println("RF_BUSY start coke_demo");
   }
 
   if(into_fired)
   {
-    // pulse_led();
+    pulse_led();
     nfc_irq();
   }
 
@@ -216,6 +217,9 @@ void nfc_irq(){
 
   //re-enable INTO
   attachInterrupt(IRQ, RF430_Interrupt, FALLING);
+
+  // Reset RF_BUSY Interrupt Polling
+  int_rf_busy = 0;
 }
 
 void write_ndef_to_nfc(const unsigned int fnc, char* payload, const size_t payload_len){
