@@ -18,85 +18,87 @@
 */
 
 // Remember to edit
-String serialport = "/dev/tty.usbmodem1411";
-
-
+// String serialport = "/dev/tty.usbmodem1411";
 
 import processing.serial.*;
 import ddf.minim.*;
 
-Serial myPort;
+Serial my_port;
 Minim minim;
 AudioPlayer player;
 
 int value = 0;
 int time;
-int wait = 1000;
+int wait = 5;
 
 String serialdata;
 
-
-
-boolean idle = true;
+boolean idle = false;
 boolean tick;
 
 int i = 0;
 
-PImage out_img;
-String[] image = {
-  "idle.png", "s1.png", "s2.png", "s3.png", "s4.png", "empty.png"
-};
+int num_frames = 17;
+PImage[] out_img = new PImage[num_frames];
 
 void setup() {
+  
    // List all the available serial ports
   println(Serial.list());
   // Open the port you are using at the rate you want:
-  myPort = new Serial(this, serialport, 115200);
+  // my_port = new Serial(this, serialport, 115200);
   
   minim = new Minim(this);
   player = minim.loadFile("open2.mp3");
   size(1440, 900);
+  // size(720, 450);
   background(0);
   smooth();
   imageMode(CENTER);
   //  noLoop();
-
+  
+  // Load and resize all images at startup to increase frame rate
+  for (int i = 0; i < num_frames; i++) {
+    String image_name = (i+1) + ".png";
+    out_img[i] = loadImage(image_name);
+    out_img[i].resize(0, 1800);
+  }
+ 
   time = millis();//store the current time
 }
 
 void draw() {
+  
+  /*
   if ( myPort.available() > 0) 
   {  // If data is available,
 
-  serialdata = myPort.readStringUntil('\n');         // read it and store it in val
+  serialdata = my_port.readStringUntil('\n');         // read it and store it in val
   println(serialdata);
     if (serialdata.indexOf('_') > 0){
       idle = false;
     }
-  } 
+  }*/
   translate(500, height/2);
   rotate(-HALF_PI);
 
+  /*
   if (millis() - time >= wait) {
     tick = !tick;//if it is, do something
     time = millis();//also update the stored time
-  }
+  }*/
 
   if (idle) {
-    out_img = loadImage(image[0]);
-    out_img.resize(0, 1800);
-    image(out_img, 0, 0);
+    image(out_img[0], 0, 0);
   } else {
     player.play();
-    out_img = loadImage(image[i]);
-    out_img.resize(0, 1800);
-    image(out_img, 0, 0);
+    image(out_img[i], 0, 0);
     println("Redraw,", i);
     i++;
     
-    if (i == image.length) {
+    if (i == num_frames) {
       println("Last image");
-      delay(8000);
+      delay_ms(2000);
       i = 0;
       idle = true;
       player.rewind();
@@ -105,11 +107,13 @@ void draw() {
 }
 
 void keyPressed() {
+  
   println("Key pressed, activating");
   idle = false;
 }
-void delay(int delay)
-{
+
+void delay_ms(int delay) {
+  
   int time = millis();
   while(millis() - time <= delay);
 }
