@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ASF_node", "ASF_node\ASF_node.cproj", "{3C0EE04D-3967-4D49-996A-1CA54E6248EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C0EE04D-3967-4D49-996A-1CA54E6248EC}.Debug|ARM.ActiveCfg = Debug|ARM
+		{3C0EE04D-3967-4D49-996A-1CA54E6248EC}.Debug|ARM.Build.0 = Debug|ARM
+		{3C0EE04D-3967-4D49-996A-1CA54E6248EC}.Release|ARM.ActiveCfg = Release|ARM
+		{3C0EE04D-3967-4D49-996A-1CA54E6248EC}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
