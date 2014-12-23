@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Empty user application template
+ * \brief Fill this in later for documentation
  *
  */
 
@@ -114,18 +114,9 @@ void configure_i2c_master(void){
 }
 void configure_port_pins(void){
 	
-	//struct port_config pin_conf;
 	struct port_config config_port_pin;
-	
-	//port_get_config_defaults(&pin_conf);
 	port_get_config_defaults(&config_port_pin);
 	
-	//config_port_pin.direction  = PORT_PIN_DIR_INPUT;
-	//config_port_pin.input_pull = PORT_PIN_PULL_UP;
-	
-	//port_pin_set_config(BUTTON_0_PIN, &config_port_pin);
-	
-	//pin_conf.direction  = PORT_PIN_DIR_OUTPUT_WTH_READBACK;
 	config_port_pin.direction  = PORT_PIN_DIR_OUTPUT;
 	config_port_pin.input_pull = PORT_PIN_PULL_NONE;
 	
@@ -150,12 +141,6 @@ void configure_port_pins(void){
 	port_pin_set_config(oled.button2_pin, &config_port_pin);
 	port_pin_set_config(oled.button3_pin, &config_port_pin);
 
-	//port_pin_set_config(EXT1_PIN_3, &pin_conf);
-	//port_pin_set_config(oled1->led2_pin, &pin_conf);
-	/*config_port_pin.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(LED_0_PIN, &config_port_pin);
-	config_port_pin.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(PORT_PB00, &config_port_pin);*/
 }
 void configure_extint_channel(void){
 	struct extint_chan_conf config_extint_chan;
@@ -340,8 +325,7 @@ int main (void)
 	menu_draw_menu(menu_selection);
 
 
-	//system_interrupt_enable_global(); // is this needed why?
-	// This skeleton code simply sets the LED to the state of the button.
+	system_interrupt_enable_global();
 	while (1) {
 		// Is button pressed?
 		if (port_pin_get_input_level(BUTTON_0_PIN) == BUTTON_0_ACTIVE) {
