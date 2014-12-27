@@ -41,7 +41,7 @@
 #ifndef RF430CL330H_H_
 #define RF430CL330H_H_
 
-//#define RF430_I2C_ADDRESS                   (0x50 >> 1)
+#define RF430_I2C_ADDRESS                   (0x50 >> 1)
 #define RF430_I2C_SLAVE_ADDRESS				(0x28)
 #define RF430_I2C_READBIT                   (0x01)
 #define RF430_I2C_BUSY                      (0x00)
@@ -59,6 +59,7 @@
 #define VERSION_REG         0xFFEE //Firmware version in ROM
 #define TEST_FUNCTION_REG   0xFFE2
 #define TEST_MODE_REG       0xFFE0
+#define TEST_MODE_KEY       0x004E
 
 #define BIT(_bit_)          (1 << (_bit_))
 #define BIT0                0x0001
@@ -117,7 +118,37 @@
 #define TIMEOUT_PERIOD_8_5_MIN  BIT2
 #define TIMEOUT_PERIOD_MASK     BIT1 + BIT2 + BIT3
 
-
+#define COSY_DEFAULT_DATA                                                              \
+{                                                                                       \
+	/*NDEF Tag Application Name*/                                                           \
+	0xD2, 0x76, 0x00, 0x00, 0x85, 0x01, 0x01,                                               \
+	\
+	/*Capability Container ID*/                                                             \
+	0xE1, 0x03,                                                                             \
+	0x00, 0x0F, /* CCLEN */                                                                 \
+	0x20,       /* Mapping version 2.0 */                                                   \
+	0x00, 0xF9, /* MLe (249 bytes); Maximum R-APDU data size */                             \
+	0x00, 0xF6, /* MLc (246 bytes); Maximum C-APDU data size */                             \
+	0x04,       /* Tag, File Control TLV (4 = NDEF file) */                                 \
+	0x06,       /* Length, File Control TLV (6 = 6 bytes of data for this tag) */           \
+	0xE1, 0x04, /* File Identifier */                                                       \
+	0x0B, 0xDF, /* Max NDEF size (3037 bytes of useable memory) */                          \
+	0x00,       /* NDEF file read access condition, read access without any security */     \
+	0x00,       /* NDEF file write access condition; write access without any security */   \
+	\
+	/* NDEF File ID */                                                                      \
+	0xE1, 0x04,                                                                             \
+	\
+	/* NDEF File for Hello World  (48 bytes total length) */                                \
+	0x00, 0x14, /* NLEN; NDEF length (2 byte long message) */                               \
+	0xD1, 0x01, 0x10,                                                                       \
+	0x54, /* T = text */                                                                    \
+	0x02,                                                                                   \
+	0x65, 0x6E, /* 'e', 'n', */                                                             \
+	\
+	/* 'Hello, world!' NDEF data; Empty NDEF message, length should match NLEN*/            \
+	0x48, 0x65, 0x6C, 0x6C, 0x6f, 0x2c, 0x20, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x21            \
+}
 
 const struct R430_I2C{
 	
