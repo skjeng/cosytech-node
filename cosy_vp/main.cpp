@@ -19,13 +19,18 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include "res_path.h"
 #include "cleanup.h"
 
+// Prototypes
 
 // Window screen dimensions, will be changed later to current display size
 int SCREEN_WIDTH  = 640;
 int SCREEN_HEIGHT = 480;
+
+// Triggered audio storage
+Mix_Chunk *wave = NULL;
 
 /**
 * Log an SDL error with some error message to the output stream of our choice
@@ -63,6 +68,8 @@ SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *ren){
 void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h){
   //Setup the destination rectangle to be at the position we want
   SDL_Rect dst;
+
+  // Since we rotate around upper right corner, we offset with width
   dst.x = x-w;
   dst.y = y;
   dst.w = w;
@@ -96,13 +103,36 @@ void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y){
   renderTexture(tex, ren, x, y, w, h);
 }
 
+void play_wave(){
+  if ( Mix_PlayChannel(-1, wave, 0) == -1 ){
+    std::cout << "Failed playing wave." << std::endl;
+  } else {
+    std::cout << "Playing wave." << std::endl;
+  }
+}
+
 
 int main(int argc, char **argv){
+  std::cout << "CosyTech Visual Program starting." << std::endl;
   SDL_DisplayMode current;
+  SDL_Event e;
+  bool quit = false;
+  bool trigger = false;
 
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
-    logSDLError(std::cout, "SDL_Init");
-    return 1;
+    logSDLError(std::cout, "SDL_Init failed");
+    return -1;
+  }
+
+  if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1 ){
+    std::cout << "Failed opening audio mixer." << std::endl;
+    return -1;
+  }
+
+  wave = Mix_LoadWAV("open.wav");
+  if (wave == NULL) {
+    std::cout << "Failed loading wave." << std::endl;
+    return -1;
   }
 
   // List all displays
@@ -121,24 +151,23 @@ int main(int argc, char **argv){
   if(should_be_zero != 0){
       logSDLError(std::cout, "Could not get display mode for video display #0.");
     } else {
-      std::cout << "Using Display #0." << std::endl;
-
       SCREEN_WIDTH = current.w;
       SCREEN_HEIGHT = current.h;
+      std::cout << "Using Display #0. Screen width=" << SCREEN_WIDTH << " height=" << SCREEN_HEIGHT << std::endl;
     }
 
 
   if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG){
     logSDLError(std::cout, "IMG_Init");
     SDL_Quit();
-    return 1;
+    return -1;
   }
 
   SDL_Window *window = SDL_CreateWindow("InteractiveAd", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN_DESKTOP);
   if (window == nullptr){
     logSDLError(std::cout, "CreateWindow Fullscreen failed");
     SDL_Quit();
-    return 1;
+    return -1;
   }
 
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1,
@@ -147,7 +176,7 @@ int main(int argc, char **argv){
     logSDLError(std::cout, "CreateRenderer");
     cleanup(window);
     SDL_Quit();
-    return 1;
+    return -1;
   }
 
   const std::string resPath = getResourcePath("img");
@@ -157,27 +186,38 @@ int main(int argc, char **argv){
     cleanup(image, renderer, window);
     IMG_Quit();
     SDL_Quit();
-    return 1;
+    return -1;
   }
 
   int iW, iH;
   SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
   std::cout << "Image W=" << iW << " H=" << iH << std::endl;
 
-  //Our event structure
-  SDL_Event e;
-  bool quit = false;
+  std::cout << "Entering main event loop." << std::endl;
   while (!quit){
+    if(trigger){
+      std::cout << "Interaction triggered!" << std::endl;
+      play_wave();
+      trigger = false;
+    }
+
     while (SDL_PollEvent(&e)){
+
       if (e.type == SDL_QUIT){
         quit = true;
       }
       if (e.type == SDL_KEYDOWN){
-        quit = true;
+        // std::cout << e.key.keysym.sym << std::endl;
+        if(e.key.keysym.sym == SDLK_SPACE){
+          trigger = true;
+        } else {
+          quit = true;
+        }
       }
       if (e.type == SDL_MOUSEBUTTONDOWN){
-        quit = true;
+        trigger = true;
       }
+
     }
     //Render the scene
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -185,10 +225,12 @@ int main(int argc, char **argv){
     renderTexture(image, renderer, 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH);
     SDL_RenderPresent(renderer);
   }
-
+  std::cout << "Cleaning up before quit." << std::endl;
+  Mix_FreeChunk(wave);
   cleanup(image, renderer, window);
   IMG_Quit();
+  Mix_CloseAudio();
   SDL_Quit();
-
+  std::cout << "Program execution done." << std::endl;
 	return 0;
 }

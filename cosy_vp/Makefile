@@ -4,7 +4,7 @@
 # brew install sdl2_mixer
 
 CXX = clang++
-SDL = -lsdl2 -lsdl2_image
+SDL = -lsdl2 -lsdl2_image -lsdl2_mixer
 # If your compiler is a bit older you may need to change -std=c++11 to -std=c++0x
 CXXFLAGS = -Wall -c -std=c++11
 LDFLAGS = $(SDL)
