@@ -40,11 +40,16 @@
 
 </head>
 <body>
+
+<audio class="audiosound" preload="auto"> 
+   <source src="open.wav" type="audio/wav">
+</audio>
+
   <script src="jquery-2.1.3.min.js"></script>
-  <script src="jQueryRotateCompressed.js"></script>
-  <script src="screenfull.js"></script>
 
   <script>
+  var running = false;
+
   function swapImages(){
     var $active = $('#demo-img .active');
     var $next = ($('#demo-img .active').next().length > 0) ? $('#demo-img .active').next() : $('#demo-img img:first');
@@ -56,6 +61,7 @@
   }
 
   function trigger_animation(){
+    $(".audiosound").trigger('play');
     setInterval('swapImages()', 25);
   }
 
@@ -70,35 +76,7 @@
       // Not allowed to autofullscreen.
     });
   </script>
-  <script>
-  $(function () {
-    $('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
-    if (!screenfull.enabled) {
-      return false;
-    }
-    $('#demo-img').click(function () {
-      screenfull.toggle(this);
-    });
-    document.addEventListener(screenfull.raw.fullscreenchange, function () {
-      var elem = screenfull.element;
 
-      $('#status').text('Is fullscreen: ' + screenfull.isFullscreen);
-
-      if (elem) {
-        $('#element').text('Element: ' + elem.localName + (elem.id ? '#' + elem.id : ''));
-      }
-
-      if (!screenfull.isFullscreen) {
-        $('#external-iframe').remove();
-        document.body.style.overflow = 'auto';
-      }
-    });
-
-    $(document).on(screenfull.raw.fullscreenchange, function screenfullChange() {
-      console.log('Fullscreen change');
-    });
-  });
-  </script>
 
   <div id="demo-img">
     <img src="1.png" class="active"/>
