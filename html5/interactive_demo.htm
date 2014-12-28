@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HTML5 Full-Screen Demonstration</title>
+  <style>
+  * {
+    padding: 0;
+    margin: 0;
+    cursor: none;
+  }
+
+  html, body
+  {
+    height: 100%;
+    font-family: "Segoe UI", arial, helvetica, freesans, sans-serif;
+    color: #333;
+    background-color: #cfcfcf;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  figure {
+    position: relative;
+    display: block;
+    
+    float: right;
+    padding: 0;
+    margin: 1em;
+    cursor: pointer;
+  }
+
+  img {
+    width: 100%;
+    display: block;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    cursor: pointer;
+  }
+
+  figure:-moz-full-screen img {
+    position: fixed;
+  }
+
+  figure:-ms-fullscreen {
+    width: auto;
+  }
+
+  figure:-ms-fullscreen img {
+    position: fixed;
+  }
+
+  figure:fullscreen img {
+    position: fixed;
+  }
+
+  #demo-img{
+    position:relative;
+    width:400px; /* Set your image width */
+    height:300px; /* Set your image height */
+  }
+  #demo-img img{
+    display:none;
+    position:absolute;
+    top:0;
+    left:0;
+  }
+  #demo-img img.active{
+    display:block;
+  }
+  </style>
+
+
+</head>
+<body>
+  <script src="jquery-2.1.3.min.js"></script>
+  <script src="jQueryRotateCompressed.js"></script>
+  <script src="screenfull.js"></script>
+  <script>
+  function swapImages(){
+    var $active = $('#demo-img .active');
+    var $next = ($('#demo-img .active').next().length > 0) ? $('#demo-img .active').next() : $('#demo-img img:first');
+
+    $active.hide( 0, function() {
+      $active.removeClass('active');
+      $next.toggle().addClass('active');
+      $next.rotate();
+    });
+  }
+
+  function trigger_demo(){
+    setInterval('swapImages()', 25);
+  }
+
+  $(document).ready(function(){
+      // After document loaded, do anything?
+    });
+  </script>
+  <script>
+  $(function () {
+    $( "#demo-img" ).click(function() {
+      trigger_demo();
+    });
+
+    $('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
+    if (!screenfull.enabled) {
+      return false;
+    }
+    $('#demo-img').click(function () {
+      screenfull.toggle(this);
+    });
+    document.addEventListener(screenfull.raw.fullscreenchange, function () {
+      var elem = screenfull.element;
+
+      $('#status').text('Is fullscreen: ' + screenfull.isFullscreen);
+
+      if (elem) {
+        $('#element').text('Element: ' + elem.localName + (elem.id ? '#' + elem.id : ''));
+      }
+
+      if (!screenfull.isFullscreen) {
+        $('#external-iframe').remove();
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    $(document).on(screenfull.raw.fullscreenchange, function screenfullChange() {
+      console.log('Fullscreen change');
+    });
+  });
+  </script>
+
+  <div id="demo-img">
+    <img src="1.png" class="active"/>
+    <img src="2.png" />
+    <img src="3.png" />
+    <img src="4.png" />
+    <img src="5.png" />
+    <img src="6.png" />
+    <img src="7.png" />
+    <img src="8.png" />
+    <img src="9.png" />
+    <img src="10.png" />
+    <img src="11.png" />
+    <img src="12.png" />
+    <img src="13.png" />
+    <img src="14.png" />
+    <img src="15.png" />
+    <img src="16.png" />
+    <img src="17.png" />
+  </div>
+
+
+
+
+
+</body>
+</html>
