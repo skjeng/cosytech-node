@@ -24,9 +24,10 @@
     max-width: 100%;
   }
 
-  #demo-img {
+  #ball {
+position:absolute;
     width: 100%;
-    display: inline;
+    display: none;
     left: 0;
     right: 0;
     top: 0;
@@ -35,6 +36,7 @@
     cursor: none;
     height: auto;
   }
+
   </style>
 
 
@@ -50,19 +52,46 @@
   <script>
   var running = false;
 
-  function swapImages(){
-    var $active = $('#demo-img .active');
-    var $next = ($('#demo-img .active').next().length > 0) ? $('#demo-img .active').next() : $('#demo-img img:first');
+  var imgc =0;
+  var images = Array("1.png",
+               "2.png",
+               "3.png",
+               "4.png",
+               "5.png",
+               "6.png",
+               "7.png",
+               "8.png",
+               "9.png",
+               "10.png",
+               "11.png",
+               "12.png",
+               "13.png",
+               "14.png",
+               "15.png",
+               "16.png",
+               "17.png");
 
-    $active.hide( 0, function() {
-      $active.removeClass('active');
-      $next.toggle().addClass('active');
-    });
-  }
+function setImage() {
+
+    imgc++;
+
+    var newimage = images[imgc];
+
+    if (imgc <= 15)  {
+      $('#ball').css("background-image", "url("+newimage+")").toggle();
+      setTimeout(setImage, 100);
+    } else if (imgc = 16) {setTimeout(setImage, 1000);};
+}
+
+
 
   function trigger_animation(){
     $(".audiosound").trigger('play');
-    setInterval('swapImages()', 25);
+    //setInterval('swapImages()', 25);
+    //swapImages();
+    imgc = -1;
+    $('#ball').show();
+    setImage();
   }
 
   $('body').keyup(function(e){
@@ -72,30 +101,13 @@
      }
    });
   $(document).ready(function(){
+    $('#ball').css("background-image", "url(1.png)").toggle();
       // After document loaded, do anything?
       // Not allowed to autofullscreen.
     });
   </script>
+<div id="ball">
+</div>
 
-
-  <div id="demo-img">
-    <img src="1.png" class="active"/>
-    <img src="2.png" />
-    <img src="3.png" />
-    <img src="4.png" />
-    <img src="5.png" />
-    <img src="6.png" />
-    <img src="7.png" />
-    <img src="8.png" />
-    <img src="9.png" />
-    <img src="10.png" />
-    <img src="11.png" />
-    <img src="12.png" />
-    <img src="13.png" />
-    <img src="14.png" />
-    <img src="15.png" />
-    <img src="16.png" />
-    <img src="17.png" />
-  </div>
 </body>
 </html>
