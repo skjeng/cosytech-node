@@ -49,6 +49,20 @@
 // Configure board for USART0 (multiplex GPIO)
 #define CONF_BOARD_USART0
 
+// Configure board for SPI
+#define CONF_BOARD_SPI
+#define CONF_BOARD_SPI_NPCS0
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
+
+/** Spi Hw ID . */
+#define SPI_ID          ID_SPI
+
+/** SPI base address for SPI master mode*/
+#define SPI_MASTER_BASE      SPI
+/** SPI base address for SPI slave mode, (on different board) */
+#define SPI_SLAVE_BASE       SPI
+
 // Defines for USART0 console
 #define USART_SERIAL                 USART0
 #define USART_SERIAL_ID              ID_USART0  //USART0 for sam4l
