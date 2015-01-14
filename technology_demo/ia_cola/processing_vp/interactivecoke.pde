@@ -18,8 +18,7 @@
 */
 
 // Remember to edit
-// String serialport = "/dev/tty.usbmodem1411";
-
+String serialport = "/dev/ttyACM0";
 import processing.serial.*;
 import ddf.minim.*;
 
@@ -46,11 +45,14 @@ void setup() {
    // List all the available serial ports
   println(Serial.list());
   // Open the port you are using at the rate you want:
-  // my_port = new Serial(this, serialport, 115200);
+  my_port = new Serial(this, serialport, 115200);
+  
+ 
+  
   
   minim = new Minim(this);
   player = minim.loadFile("open2.mp3");
-  size(1440, 900);
+  size(1366, 768);
   // size(720, 450);
   background(0);
   smooth();
@@ -69,8 +71,8 @@ void setup() {
 
 void draw() {
   
-  /*
-  if ( myPort.available() > 0) 
+  
+  if ( my_port.available() > 0) 
   {  // If data is available,
 
   serialdata = my_port.readStringUntil('\n');         // read it and store it in val
@@ -78,7 +80,7 @@ void draw() {
     if (serialdata.indexOf('_') > 0){
       idle = false;
     }
-  }*/
+  }
   translate(500, height/2);
   rotate(-HALF_PI);
 
