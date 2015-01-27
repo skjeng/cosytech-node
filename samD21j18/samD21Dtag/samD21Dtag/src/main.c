@@ -340,7 +340,7 @@ void rf430_i2c_write_register(uint16_t reg_addr, uint16_t val){
 		.hs_master_code  = 0x0,
 	};
 	
-	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) != STATUS_OK) {
+	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet) != STATUS_OK) {
 		/* Increment timeout counter and check if timed out. */
 		if (timeout++ == TIMEOUT) {
 			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
@@ -352,7 +352,7 @@ void rf430_i2c_write_register(uint16_t reg_addr, uint16_t val){
 	
 	packet.data=tx_data;
 	
-	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) != STATUS_OK) {
+	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet) != STATUS_OK) {
 		/* Increment timeout counter and check if timed out. */
 		if (timeout++ == TIMEOUT) {
 			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
@@ -360,6 +360,7 @@ void rf430_i2c_write_register(uint16_t reg_addr, uint16_t val){
 		}
 	}
 	
+	i2c_master_send_stop(&i2c_master_instance);
 	usart_write_buffer_wait(&usart_instance, "DATA WRITE SUCCESS\n\r", sizeof("DATA WRITE SUCCESS\n\r"));
 }
 void rf430_i2c_write_continous(uint16_t reg_addr, uint8_t* write_data, uint16_t data_length){
