@@ -324,56 +324,33 @@ void rf430_i2c_write_register(uint16_t reg_addr, uint16_t val){
 	uint16_t timeout = 0;
 	uint8_t tx_addr[2] = {0};
 	uint8_t tx_data[2] = {0};
+	uint8_t tx_addr_data[3] = {0};
 		
 	tx_addr[0] = reg_addr >> 8;      // MSB of address
 	tx_addr[1] = reg_addr & 0xFF;
 	
+	tx_addr_data[0]=reg_addr >> 8;
+	tx_addr_data[1] = reg_addr & 0xFF;
+	tx_addr_data[3] = val >> 8;
+	tx_addr_data[2] = val & 0xFF;
+	
+	
 	tx_data[0] = val >> 8;
 	tx_data[1] = val & 0xFF;
 	
-	struct i2c_master_packet packet = {
+	/*struct i2c_master_packet packet = {
 		.address     = RF430_I2C_SLAVE_ADDRESS,
 		.data_length = DATA_LENGTH,
 		.data        = tx_addr,
 		.ten_bit_address = false,
 		.high_speed      = false,
 		.hs_master_code  = 0x0,
-	};
-	
-	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet) != STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
-			break;
-		}
-	}
-	
-	usart_write_buffer_wait(&usart_instance, "WRITE SUCCESS\n\r", sizeof("WRITE SUCCESS\n\r"));
-	
-	packet.data=tx_data;
-	
-	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet) != STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
-			break;
-		}
-	}
-	
-	i2c_master_send_stop(&i2c_master_instance);
-	usart_write_buffer_wait(&usart_instance, "DATA WRITE SUCCESS\n\r", sizeof("DATA WRITE SUCCESS\n\r"));
-}
-void rf430_i2c_write_continous(uint16_t reg_addr, uint8_t* write_data, uint16_t data_length){
-	uint16_t timeout = 0;
-	uint8_t tx_addr[2] = {0};
-	
-	tx_addr[0] = reg_addr >> 8;      // MSB of address
-	tx_addr[1] = reg_addr & 0xFF;
+	};*/
 	
 	struct i2c_master_packet packet = {
 		.address     = RF430_I2C_SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = tx_addr,
+		.data_length = 4,
+		.data        = tx_addr_data,
 		.ten_bit_address = false,
 		.high_speed      = false,
 		.hs_master_code  = 0x0,
@@ -387,10 +364,68 @@ void rf430_i2c_write_continous(uint16_t reg_addr, uint8_t* write_data, uint16_t 
 		}
 	}
 	
+	usart_write_buffer_wait(&usart_instance, "WRITE SUCCESS\n\r", sizeof("WRITE SUCCESS\n\r"));
+	
+	/*packet.data=tx_data;
+	
+	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet) != STATUS_OK) {
+		/* Increment timeout counter and check if timed out. */
+		/*if (timeout++ == TIMEOUT) {
+			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
+			break;
+		}
+	}
+	
+	i2c_master_send_stop(&i2c_master_instance);
+	*/
+	usart_write_buffer_wait(&usart_instance, "DATA WRITE SUCCESS\n\r", sizeof("DATA WRITE SUCCESS\n\r"));
+}
+void rf430_i2c_write_continous(uint16_t reg_addr, uint8_t* write_data, uint16_t data_length){
+	uint16_t timeout = 0;
+	uint8_t tx_addr[2] = {0};
+	uint8_t tx_addr_data[2 + data_length];
+	
+	tx_addr[0] = reg_addr >> 8;      // MSB of address
+	tx_addr[1] = reg_addr & 0xFF;
+	
+	tx_addr_data[0] = reg_addr >> 8;      // MSB of address
+	tx_addr_data[1] = reg_addr & 0xFF;
+	
+	for(int i = 2; i<data_length+2; i++){
+		tx_addr_data[i] = write_data [i-2];
+	};
+	
+	/*struct i2c_master_packet packet = {
+		.address     = RF430_I2C_SLAVE_ADDRESS,
+		.data_length = DATA_LENGTH,
+		.data        = tx_addr,
+		.ten_bit_address = false,
+		.high_speed      = false,
+		.hs_master_code  = 0x0,
+	};
+	
+	
+	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet) != STATUS_OK) {
+		if (timeout++ == TIMEOUT) {
+			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
+			break;
+		}
+	}
+	
 	usart_write_buffer_wait(&usart_instance, "WRITE ADDRESS SUCCESS\n\r", sizeof("WRITE ADDRESS SUCCESS\n\r"));
 	
-	packet.data= write_data;
+	packet.data = write_data;
 	packet.data_length = data_length;
+	*/
+	
+	struct i2c_master_packet packet = {
+		.address     = RF430_I2C_SLAVE_ADDRESS,
+		.data_length = DATA_LENGTH+data_length,
+		.data        = tx_addr_data,
+		.ten_bit_address = false,
+		.high_speed      = false,
+		.hs_master_code  = 0x0,
+	};
 	
 	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet) != STATUS_OK) {
 		/* Increment timeout counter and check if timed out. */
