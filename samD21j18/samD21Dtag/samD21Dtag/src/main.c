@@ -88,16 +88,16 @@ void configure_usart(void){
 	usart_get_config_defaults(&config_usart);
 	
 	config_usart.baudrate    = 9600;
-	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING; //USART_RX_1_TX_0_XCK_1
+	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0; //PINMUX_PA22C_SERCOM3_PAD0
+	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1; //PINMUX_PA23C_SERCOM3_PAD1
+	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2; //PINMUX_UNUSED
+	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3; //PINMUX_UNUSED
 	
 	while (usart_init(&usart_instance,
 	EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {}
 		
-	usart_enable(&usart_instance);
+	usart_enable(&usart_instance); //#define EDBG_CDC_MODULE              SERCOM3
 }
 
 // Initial software module instances of I2C

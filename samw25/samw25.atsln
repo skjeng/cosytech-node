@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "samw25", "samw25\samw25.cproj", "{82E8A00C-4731-40EE-BBEA-3C65B06BEB03}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82E8A00C-4731-40EE-BBEA-3C65B06BEB03}.Debug|ARM.ActiveCfg = Debug|ARM
+		{82E8A00C-4731-40EE-BBEA-3C65B06BEB03}.Debug|ARM.Build.0 = Debug|ARM
+		{82E8A00C-4731-40EE-BBEA-3C65B06BEB03}.Release|ARM.ActiveCfg = Release|ARM
+		{82E8A00C-4731-40EE-BBEA-3C65B06BEB03}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
