@@ -27,10 +27,11 @@
  /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+
 #include <asf.h>
+#include <RF430CL330H/RF430CL330H.h>
 
 void configure_port_pins(void);
-void configure_i2c_master(void);
 void configure_usart(void);
 
 void configure_port_pins(void){
@@ -56,14 +57,13 @@ void configure_usart(void){
 	struct usart_config config_usart;
 	usart_get_config_defaults(&config_usart);
 	
-	config_usart.baudrate    = 9600;
+	config_usart.baudrate    = 9600; //Need to find the SERCOM connected to EDBG on the SAMW25
 	/*
-	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	
+	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING; //USART_RX_1_TX_0_XCK_1
+	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0; //PINMUX_PA22C_SERCOM3_PAD0
+	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1; //PINMUX_PA23C_SERCOM3_PAD1
+	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2; //PINMUX_UNUSED
+	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3; //PINMUX_UNUSED
 	
 	while (usart_init(&usart_instance,
 	EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {}
@@ -71,26 +71,7 @@ void configure_usart(void){
 	usart_enable(&usart_instance);
 }
 
-struct i2c_master_module i2c_master_instance;
-// Initialize and config I2C on SERCOM0 bus
 
-void configure_i2c_master(void){
-	/* Initialize config structure and software module. */
-	struct i2c_master_config config_i2c_master;
-	
-	i2c_master_get_config_defaults(&config_i2c_master);
-	config_i2c_master.buffer_timeout = 10000;
-	
-	//config_i2c_master.pinmux_pad0 = PINMUX_PA16C_SERCOM1_PAD0;
-	config_i2c_master.pinmux_pad0 = PINMUX_PA08C_SERCOM0_PAD0;
-	config_i2c_master.pinmux_pad1 = PINMUX_PA09C_SERCOM0_PAD1;
-	//config_i2c_master.pinmux_pad1 = PINMUX_PA17C_SERCOM1_PAD1;
-
-	/* Initialize and enable device with config. */
-	i2c_master_init(&i2c_master_instance, SERCOM0, &config_i2c_master);
-	//i2c_master_reset(&i2c_master_instance);
-	i2c_master_enable(&i2c_master_instance);
-}
 
 
 int main (void)
@@ -98,10 +79,16 @@ int main (void)
 	system_init();
 	//delay_init();
 	configure_port_pins();
-	configure_i2c_master();
+	rf430_init();
+	
 	port_pin_set_output_level(PIN_PA02, false);
 
 	// Insert application code here, after the board has been initialized.
+	
+	//example application with cosytech data. (This data should be fetched from web/bluetooth)
+	uint8_t NDEF_Application_Data[] = COSY_DEFAULT_DATA;
+	rf430_i2c_write_continous(0, NDEF_Application_Data, sizeof(NDEF_Application_Data));
+
 	
 	while(1){
 		delay_ms(500);
