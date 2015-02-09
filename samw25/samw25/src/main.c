@@ -31,6 +31,8 @@
 #include <asf.h>
 #include <RF430CL330H/RF430CL330H.h>
 
+#define _RESET PIN_PA06
+
 void configure_port_pins(void);
 void configure_usart(void);
 
@@ -46,6 +48,7 @@ void configure_port_pins(void){
 	config_port_pin.input_pull = PORT_PIN_PULL_NONE;
 	
 	port_pin_set_config(PIN_PA02, &config_port_pin);
+	port_pin_set_config(_RESET, &config_port_pin);
 }
 
 
@@ -79,6 +82,12 @@ int main (void)
 	system_init();
 	//delay_init();
 	configure_port_pins();
+	
+	port_pin_set_output_level(_RESET, 1);
+	port_pin_set_output_level(_RESET, 0);
+	delay_ms(100);
+	port_pin_set_output_level(_RESET, 1);
+	
 	rf430_init();
 	
 	port_pin_set_output_level(PIN_PA02, false);
