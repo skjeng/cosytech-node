@@ -29,8 +29,9 @@
  * Atmel Software Framework (ASF).
  */
 #include <asf.h>
+#include <RF430CL330H/RF430CL330H.h>
 #include <stdio.h>
-#include "RF430CL330H.h"
+
 
 struct oled_instance {
 	//! Pin identifier for first LED
@@ -73,18 +74,17 @@ void configure_extint_channel(void);
 void configure_extint_callbacks(void);
 void extint_detection_callback(void);
 void extint_detection_callback_line_2(void);
-uint16_t rf430_i2c_read_register(uint16_t reg_addr);
-void rf430_i2c_write_register(uint16_t reg_addr, uint16_t val);
-void rf430_i2c_write_continous(uint16_t reg_addr, uint8_t* write_data, uint16_t data_length);
-void rf430_i2c_config(void);
+
 
 //Initial software module instances of USART
 struct usart_module usart_instance;
+struct usart_module usart_instance2;
 //Sets USART to the EDBG virtual COM port of SAMD21 Xpro
 
 void configure_usart(void){
 	
 	struct usart_config config_usart;
+	struct usart_config config_usart2;
 	usart_get_config_defaults(&config_usart);
 	
 	config_usart.baudrate    = 9600;
@@ -94,31 +94,19 @@ void configure_usart(void){
 	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2; //PINMUX_UNUSED
 	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3; //PINMUX_UNUSED
 	
-	while (usart_init(&usart_instance,
-	EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {}
+	while (usart_init(&usart_instance,EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {}
+		config_usart2.baudrate    = 9600;
+		config_usart2.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING; //USART_RX_1_TX_0_XCK_1
+		config_usart2.pinmux_pad0 = PINMUX_PA08C_SERCOM0_PAD0; //PINMUX_PA22C_SERCOM3_PAD0
+		config_usart2.pinmux_pad1 = PINMUX_PA09C_SERCOM0_PAD1; //PINMUX_PA23C_SERCOM3_PAD1
+		config_usart2.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2; //PINMUX_UNUSED
+		config_usart2.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	while (usart_init(&usart_instance2, SERCOM0, &config_usart2) != STATUS_OK) {}
 		
 	usart_enable(&usart_instance); //#define EDBG_CDC_MODULE              SERCOM3
 }
 
-// Initial software module instances of I2C
-struct i2c_master_module i2c_master_instance;
-// Initialize and config I2C on SERCOM2 bus
 
-void configure_i2c_master(void){
-	/* Initialize config structure and software module. */
-	struct i2c_master_config config_i2c_master;
-	
-	i2c_master_get_config_defaults(&config_i2c_master);
-	config_i2c_master.buffer_timeout = 10000;
-	
-	config_i2c_master.pinmux_pad0 = PINMUX_PA16C_SERCOM1_PAD0;
-	config_i2c_master.pinmux_pad1 = PINMUX_PA17C_SERCOM1_PAD1;
-
-	/* Initialize and enable device with config. */
-	i2c_master_init(&i2c_master_instance, SERCOM1, &config_i2c_master);
-	//i2c_master_reset(&i2c_master_instance);
-	i2c_master_enable(&i2c_master_instance);
-}
 
 #define _RESET PIN_PB11
 void configure_port_pins(void){
@@ -265,225 +253,11 @@ static void menu_draw_menu(uint8_t menu_select)
 	gfx_mono_generic_draw_filled_rect(0,menu_select*8,GFX_MONO_LCD_WIDTH,8,GFX_PIXEL_XOR);
 }
 
-//Prototype from the Arduino library, see if it can't be done a better way with only ASF I2C calls
-#define DATA_LENGTH 2
-#define TIMEOUT 1000
-
-uint16_t rf430_i2c_read_register(uint16_t reg_addr){
-	
-	uint16_t timeout = 0;
-	static uint8_t read_buffer[DATA_LENGTH];
-	uint8_t tx_addr[DATA_LENGTH] = {0,0};
-	uint8_t rx_data[DATA_LENGTH] = {0,0};
-	
-	tx_addr[0] = reg_addr >> 8;      // MSB of address
-	tx_addr[1] = reg_addr & 0xFF;
-	
-	usart_write_buffer_wait(&usart_instance, "Starting to write packet\n\r", sizeof("Starting to write packet\n\r"));
-	
-	struct i2c_master_packet packet = {
-		.address     = RF430_I2C_SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = tx_addr,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
-	};
-	
 
 
-	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) != STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
-			break;
-		}
-	}
-	
-	//delay_ms(500);
-	
-	packet.data = read_buffer;
-	
-	while (i2c_master_read_packet_wait(&i2c_master_instance, &packet)  != STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			usart_write_buffer_wait(&usart_instance, "READ TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
-			break;
-		}
-	}
-	
-	rx_data[0] = packet.data[0];
-	rx_data[1] = packet.data[1];
-	
-	return (rx_data[1] << 8 | rx_data[0]);
-	
-	
-}
 
-void rf430_i2c_write_register(uint16_t reg_addr, uint16_t val){
-	uint16_t timeout = 0;
-	uint8_t tx_addr[2] = {0};
-	uint8_t tx_data[2] = {0};
-	uint8_t tx_addr_data[3] = {0};
-		
-	tx_addr[0] = reg_addr >> 8;      // MSB of address
-	tx_addr[1] = reg_addr & 0xFF;
-	
-	tx_addr_data[0]=reg_addr >> 8;
-	tx_addr_data[1] = reg_addr & 0xFF;
-	tx_addr_data[3] = val >> 8;
-	tx_addr_data[2] = val & 0xFF;
-	
-	
-	tx_data[0] = val >> 8;
-	tx_data[1] = val & 0xFF;
-	
-	/*struct i2c_master_packet packet = {
-		.address     = RF430_I2C_SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = tx_addr,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
-	};*/
-	
-	struct i2c_master_packet packet = {
-		.address     = RF430_I2C_SLAVE_ADDRESS,
-		.data_length = 4,
-		.data        = tx_addr_data,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
-	};
-	
-	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) != STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
-			break;
-		}
-	}
-	
-	usart_write_buffer_wait(&usart_instance, "WRITE SUCCESS\n\r", sizeof("WRITE SUCCESS\n\r"));
-	
-	/*packet.data=tx_data;
-	
-	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet) != STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		/*if (timeout++ == TIMEOUT) {
-			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
-			break;
-		}
-	}
-	
-	i2c_master_send_stop(&i2c_master_instance);
-	*/
-	usart_write_buffer_wait(&usart_instance, "DATA WRITE SUCCESS\n\r", sizeof("DATA WRITE SUCCESS\n\r"));
-}
-void rf430_i2c_write_continous(uint16_t reg_addr, uint8_t* write_data, uint16_t data_length){
-	uint16_t timeout = 0;
-	uint8_t tx_addr[2] = {0};
-	uint8_t tx_addr_data[2 + data_length];
-	
-	tx_addr[0] = reg_addr >> 8;      // MSB of address
-	tx_addr[1] = reg_addr & 0xFF;
-	
-	tx_addr_data[0] = reg_addr >> 8;      // MSB of address
-	tx_addr_data[1] = reg_addr & 0xFF;
-	
-	for(int i = 2; i<data_length+2; i++){
-		tx_addr_data[i] = write_data [i-2];
-	};
-	
-	/*struct i2c_master_packet packet = {
-		.address     = RF430_I2C_SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = tx_addr,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
-	};
-	
-	
-	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet) != STATUS_OK) {
-		if (timeout++ == TIMEOUT) {
-			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
-			break;
-		}
-	}
-	
-	usart_write_buffer_wait(&usart_instance, "WRITE ADDRESS SUCCESS\n\r", sizeof("WRITE ADDRESS SUCCESS\n\r"));
-	
-	packet.data = write_data;
-	packet.data_length = data_length;
-	*/
-	
-	struct i2c_master_packet packet = {
-		.address     = RF430_I2C_SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH+data_length,
-		.data        = tx_addr_data,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
-	};
-	
-	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet) != STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			usart_write_buffer_wait(&usart_instance, "WRITE TIMEOUT\n\r", sizeof("TIMEOUT\n\r"));
-			break;
-		}
-	}
-	i2c_master_send_stop(&i2c_master_instance);
-	
-	usart_write_buffer_wait(&usart_instance, "CONTINOUS DATA WRITE SUCCESS\n\r", sizeof("DATA WRITE SUCCESS\n\r"));
-}
 
-void rf430_i2c_config(void){
-	uint16_t version = 0;
-	usart_write_buffer_wait(&usart_instance, "Starting config\n\r", sizeof("Starting config\n\r"));
-	port_pin_set_output_level(_RESET, 1);
-	port_pin_set_output_level(_RESET, 0);
-	delay_ms(100);
-	port_pin_set_output_level(_RESET, 1);
-	delay_ms(1000);
-	usart_write_buffer_wait(&usart_instance, "Reset done\n\r", sizeof("Reset done\n\r"));
-	while(!(rf430_i2c_read_register(STATUS_REG) & READY));
-	usart_write_buffer_wait(&usart_instance, "STATUS: READY\n\r", sizeof("STATUS: READY\n\r"));
-	
-	version = rf430_i2c_read_register(VERSION_REG);
-	char version_buffer[50] = {0};
-	sprintf(version_buffer, "Firmware version :0x%x \n\r", version);
-	usart_write_buffer_wait(&usart_instance, version_buffer, sizeof(version_buffer));
-	
-	if (version == 0x0101 || version == 0x0201)
-	{ // the issue exists in these two versions
-		rf430_i2c_write_register(TEST_MODE_REG, TEST_MODE_KEY);
-		rf430_i2c_write_register(CONTROL_REG, 0x0080);
-		if (version == 0x0101)
-		{ // Ver C
-			rf430_i2c_write_register(0x2a98, 0x0650);
-			usart_write_buffer_wait(&usart_instance, "Version C Registred\n\r", sizeof("Version C Registred\n\r"));
-		}
-		else
-		{ // Ver D
-			rf430_i2c_write_register(0x2a6e, 0x0650);
-		}
-		rf430_i2c_write_register(0x2814, 0);
-		rf430_i2c_write_register(TEST_MODE_REG, 0);
-	}
-	
-	uint8_t NDEF_Application_Data[] = COSY_DEFAULT_DATA;
-	
-	rf430_i2c_write_continous(0, NDEF_Application_Data, sizeof(NDEF_Application_Data));
-	
-	//Enable interrupts for End of Read and End of Write
-	rf430_i2c_write_register(INT_ENABLE_REG, EOW_INT_ENABLE + EOR_INT_ENABLE);
 
-	//Configure INTO pin for active low and enable RF
-	rf430_i2c_write_register(CONTROL_REG, (INT_ENABLE + INTO_DRIVE + RF_ENABLE) );
-	
-}
 
 
 int main (void)
@@ -494,7 +268,8 @@ int main (void)
 	system_init();
 	// Insert application code here, after the board has been initialized.
 	configure_usart();
-	usart_write_buffer_wait(&usart_instance, test_string, sizeof(test_string));	
+	usart_write_buffer_wait(&usart_instance, test_string, sizeof(test_string));
+	usart_write_buffer_wait(&usart_instance2, test_string, sizeof(test_string));	
 	configure_i2c_master();
 	configure_port_pins();
 	configure_extint_channel();
@@ -502,6 +277,15 @@ int main (void)
 	
 	gfx_mono_init();
 	menu_draw_menu(menu_selection);
+	
+	port_pin_set_output_level(_RESET, 1);
+	port_pin_set_output_level(_RESET, 0);
+	delay_ms(100);
+	port_pin_set_output_level(_RESET, 1);
+	delay_ms(1000);
+	
+	usart_write_buffer_wait(&usart_instance, "Reset done\n\r", sizeof("Reset done\n\r"));
+	
 	rf430_i2c_config();
 
 

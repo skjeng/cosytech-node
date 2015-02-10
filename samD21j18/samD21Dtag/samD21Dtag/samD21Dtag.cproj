@@ -563,6 +563,7 @@
     <Folder Include="src\ASF\thirdparty\CMSIS\Lib\" />
     <Folder Include="src\ASF\thirdparty\CMSIS\Lib\GCC\" />
     <Folder Include="src\config\" />
+    <Folder Include="src\RF430CL330H" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\ASF\common2\components\display\ssd1306\ssd1306.c">
@@ -571,12 +572,15 @@
     <Compile Include="src\ASF\common2\services\delay\sam0\cycle_counter.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\RF430CL330H\RF430CL330H.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\RF430CL330H\RF430CL330H.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="src\ASF\common2\services\delay\sam0\cycle_counter.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="src\RF430CL330H.h">
-      <SubType>compile</SubType>
-    </Compile>
     <None Include="src\ASF\common2\components\display\ssd1306\ssd1306.h">
       <SubType>compile</SubType>
     </None>

@@ -155,4 +155,9 @@ const struct R430_I2C{
 	
 };
 
+uint16_t rf430_i2c_read_register(uint16_t reg_addr);
+void rf430_i2c_write_register(uint16_t reg_addr, uint16_t val);
+void rf430_i2c_write_continous(uint16_t reg_addr, uint8_t* write_data, uint16_t data_length);
+void rf430_i2c_config(void);
+
 #endif /* RF430CL330H_H_ */
