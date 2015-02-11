@@ -497,13 +497,137 @@
     <Folder Include="src\ASF\thirdparty\CMSIS\Lib\" />
     <Folder Include="src\ASF\thirdparty\CMSIS\Lib\GCC\" />
     <Folder Include="src\config\" />
+    <Folder Include="src\winc" />
     <Folder Include="src\RF430CL330H\" />
+    <Folder Include="src\winc\bsp" />
+    <Folder Include="src\winc\bsp\include" />
+    <Folder Include="src\winc\bsp\source" />
+    <Folder Include="src\winc\bus_wrapper" />
+    <Folder Include="src\winc\bus_wrapper\include" />
+    <Folder Include="src\winc\bus_wrapper\source" />
+    <Folder Include="src\winc\common" />
+    <Folder Include="src\winc\common\include" />
+    <Folder Include="src\winc\common\source" />
+    <Folder Include="src\winc\driver" />
+    <Folder Include="src\winc\driver\include" />
+    <Folder Include="src\winc\driver\source" />
+    <Folder Include="src\winc\socket" />
+    <Folder Include="src\winc\socket\include" />
+    <Folder Include="src\winc\socket\source" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\config\conf_extint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\conf_spi.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\conf_winc.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\RF430CL330H\RF430CL330H.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\RF430CL330H\RF430CL330H.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\bsp\include\nm_bsp.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\bsp\include\nm_bsp_samd21.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\bsp\source\nm_bsp_samd21.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\bus_wrapper\include\nm_bus_wrapper.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\bus_wrapper\source\nm_bus_wrapper_samd21.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\common\include\nm_common.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\common\source\nm_common.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\include\m2m_ota.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\include\m2m_periph.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\include\m2m_types.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\include\m2m_wifi.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\m2m_hif.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\m2m_hif.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\m2m_hif_crt.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\m2m_ota.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\m2m_periph.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\m2m_wifi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmasic.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmasic.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmbus.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmbus.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmdrv.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmdrv.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmdrv_crt.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmi2c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmi2c.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmspi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmspi.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmuart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\driver\source\nmuart.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\socket\include\socket.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\socket\source\socket.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\winc\socket\source\socket_internal.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\ASF\common2\services\delay\delay.h">
