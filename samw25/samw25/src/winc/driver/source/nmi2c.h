@@ -45,7 +45,7 @@
 #ifndef _NMI2C_H_
 #define _NMI2C_H_
 
-#include "common\include\nm_common.h"
+#include "winc\common\include\nm_common.h"
 
 /**
 *	@fn		nm_i2c_read_reg

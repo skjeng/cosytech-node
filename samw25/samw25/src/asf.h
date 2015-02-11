@@ -62,6 +62,10 @@
 // From module: Delay routines
 #include <delay.h>
 
+// From module: EXTINT - External Interrupt (Callback APIs)
+#include <extint.h>
+#include <extint_callback.h>
+
 // From module: Generic board support
 #include <board.h>
 
@@ -74,12 +78,20 @@
 // From module: Part identification macros
 #include <parts.h>
 
+// From module: SERCOM Callback API
+#include <sercom.h>
+#include <sercom_interrupt.h>
+
 // From module: SERCOM I2C - Master Mode I2C (Polled APIs)
 #include <i2c_common.h>
 #include <i2c_master.h>
 
 // From module: SERCOM Polled API
 #include <sercom.h>
+
+// From module: SERCOM SPI - Serial Peripheral Interface (Callback APIs)
+#include <spi.h>
+#include <spi_interrupt.h>
 
 // From module: SERCOM USART - Serial Communications (Polled APIs)
 #include <usart.h>
@@ -102,5 +114,11 @@
 
 // From module: SYSTEM - Reset Management for SAM D20/D21/R21/D10/D11
 #include <reset.h>
+
+// From module: Standard serial I/O (stdio)
+#include <stdio_serial.h>
+
+// From module: USART - Serial interface- SAM implementation for devices with only USART
+#include <serial.h>
 
 #endif // ASF_H

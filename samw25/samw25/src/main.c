@@ -30,8 +30,9 @@
 
 #include <asf.h>
 #include <RF430CL330H/RF430CL330H.h>
-#include "driver/include/m2m_wifi.h"
-#include "driver/source/nmasic.h"
+#include "winc\driver/include/m2m_wifi.h"
+#include "winc\driver/source/nmasic.h"
+#include <wifi.h>
 
 #define _RESET PIN_PB11
 
@@ -203,6 +204,8 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 
 int main (void)
 {
+	tstrWifiInitParam param;
+	int8_t ret;
 	system_init();
 	//delay_init();
 	configure_port_pins();

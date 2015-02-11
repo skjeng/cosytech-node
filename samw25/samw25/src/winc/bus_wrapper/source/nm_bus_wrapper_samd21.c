@@ -43,9 +43,9 @@
  */
 
 #include <stdio.h>
-#include "bsp/include/nm_bsp.h"
-#include "common/include/nm_common.h"
-#include "bus_wrapper/include/nm_bus_wrapper.h"
+#include "winc/bsp/include/nm_bsp.h"
+#include "winc/common/include/nm_common.h"
+#include "winc/bus_wrapper/include/nm_bus_wrapper.h"
 #include "asf.h"
 
 #define NM_BUS_MAX_TRX_SZ	256

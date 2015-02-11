@@ -42,13 +42,13 @@
  *
  */
 
-#include "common\include\nm_common.h"
-#include "driver\source\nmbus.h"
-#include "bsp\include\nm_bsp.h"
-#include "m2m_hif.h"
-#include "driver\include\m2m_types.h"
-#include "driver\source\nmasic.h"
-#include "driver\include\m2m_periph.h"
+#include "winc\common\include\nm_common.h"
+#include "winc\driver\source\nmbus.h"
+#include "winc\bsp\include\nm_bsp.h"
+#include "winc\driver\source\m2m_hif.h"
+#include "winc\driver\include\m2m_types.h"
+#include "winc\driver\source\nmasic.h"
+#include "winc\driver\include\m2m_periph.h"
 
 #if (defined EDGE_INTERRUPT)&&(defined LEVEL_INTERRUPT)
 #error "only one type of interrupt EDGE_INTERRUPT,LEVEL_INTERRUPT"
