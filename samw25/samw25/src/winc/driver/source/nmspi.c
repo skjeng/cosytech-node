@@ -41,13 +41,13 @@
  * \asf_license_stop
  *
  */
-#include "winc\common\include\nm_common.h"
+#include "common\include\nm_common.h"
 
 #ifdef USE_SPI
 
 #define USE_OLD_SPI_SW
 
-#include "winc\bus_wrapper\include\nm_bus_wrapper.h"
+#include "bus_wrapper\include\nm_bus_wrapper.h"
 #include "nmspi.h"
 
 #define NMI_PERIPH_REG_BASE 0x1000

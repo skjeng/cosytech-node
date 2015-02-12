@@ -46,9 +46,9 @@
 INCLUDES
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 
-#include "winc\socket/include/socket.h"
-#include "winc\driver/source/m2m_hif.h"
-#include "winc\socket/source/socket_internal.h"
+#include "socket/include/socket.h"
+#include "driver/source/m2m_hif.h"
+#include "socket/source/socket_internal.h"
 
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 MACROS

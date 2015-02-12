@@ -53,13 +53,13 @@ extern "C" {
 #include "cmsis/samd21/include/pio/samd21g18a.h"
 
 /** Module Pin Settings */
-#define CONF_WIFI_M2M_RESET_PIN                 PIN_PB08 //
-#define CONF_WIFI_M2M_CHIP_ENABLE_PIN           PIN_PB09
-#define CONF_WIFI_M2M_WAKE_PIN                  PIN_PA04
+#define CONF_WIFI_M2M_RESET_PIN                 PIN_PB06
+#define CONF_WIFI_M2M_CHIP_ENABLE_PIN           PIN_PB05
+#define CONF_WIFI_M2M_WAKE_PIN                  PIN_PB07
 
-#define CONF_WIFI_M2M_INT_PIN                   PIN_PA01A_EIC_EXTINT1; //EXT1_IRQ_PIN; no idea if this is correct at 
-#define CONF_WIFI_M2M_INT_MUX                   MUX_PA01A_EIC_EXTINT1; //EXT1_IRQ_MUX;MUX_PB04A_EIC_EXTINT4
-#define CONF_WIFI_M2M_INT_EIC                   (1) //IRQ_INPUT
+#define CONF_WIFI_M2M_INT_PIN                   PIN_PB04A_EIC_EXTINT4; //EXT1_IRQ_PIN;
+#define CONF_WIFI_M2M_INT_MUX                   MUX_PB04A_EIC_EXTINT4; //EXT1_IRQ_MUX;
+#define CONF_WIFI_M2M_INT_EIC                   (4) //IRQ_INPUT
 
 /** INTERRUPT Detect Mode Settings */
 #define CONF_WIFI_M2M_EDGE_INTERRUPT            (1)
@@ -72,7 +72,7 @@ extern "C" {
 /** SPI Settings */
 #define CONF_WIFI_M2M_SPI_MODULE                SERCOM0 // EXT1_SPI_MODULE
 #define CONF_WIFI_M2M_SPI_SERCOM_MUX            SPI_SIGNAL_MUX_SETTING_E // EXT1_SPI_SERCOM_MUX_SETTING 
-#define CONF_WIFI_M2M_SPI_PINMUX_PAD0           PINMUX_PA04D_SERCOM0_PAD0 //EXT1_SPI_SERCOM_PINMUX_PAD0 /* in */ //
+#define CONF_WIFI_M2M_SPI_PINMUX_PAD0           PINMUX_PA04D_SERCOM0_PAD0 EXT1_SPI_SERCOM_PINMUX_PAD0 /* in */ //
 #define CONF_WIFI_M2M_SPI_PINMUX_PAD1           PINMUX_UNUSED /* cs driven from software */
 #define CONF_WIFI_M2M_SPI_PINMUX_PAD2           PINMUX_PA06D_SERCOM0_PAD2  /* out */ //EXT1_SPI_SERCOM_PINMUX_PAD2
 #define CONF_WIFI_M2M_SPI_PINMUX_PAD3           PINMUX_PA07D_SERCOM0_PAD3  /* sck */ //EXT1_SPI_SERCOM_PINMUX_PAD3

@@ -29,6 +29,7 @@
       <framework-data>
         <options>
           <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
+<<<<<<< HEAD
           <option id="common2.services.delay" value="Add" config="systick" content-id="Atmel.ASF" />
           <option id="sam0.drivers.extint" value="Add" config="callback" content-id="Atmel.ASF" />
           <option id="sam0.drivers.port" value="Add" config="" content-id="Atmel.ASF" />
@@ -38,6 +39,14 @@
           <option id="sam0.drivers.system" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam0.drivers.system.clock" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam0.utils.stdio.stdio_serial" value="Add" config="" content-id="Atmel.ASF" />
+=======
+          <option id="sam0.drivers.port" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam0.drivers.sercom.i2c.master" value="Add" config="polled" content-id="Atmel.ASF" />
+          <option id="sam0.drivers.sercom.usart" value="Add" config="polled" content-id="Atmel.ASF" />
+          <option id="sam0.drivers.system" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam0.drivers.system.clock" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common2.services.delay" value="Add" config="cycle" content-id="Atmel.ASF" />
+>>>>>>> parent of a382cd2... SAMW25 med winc1500 driver
           <option id="sam0.utils.linker_scripts" value="Add" config="" content-id="Atmel.ASF" />
         </options>
         <configurations />
@@ -191,6 +200,7 @@
           <file path="src/ASF/common2/services/delay/sam0/cycle_counter.c" framework="" version="3.21.0" source="common2\services\delay\sam0\cycle_counter.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common2/services/delay/sam0/cycle_counter.h" framework="" version="3.21.0" source="common2\services\delay\sam0\cycle_counter.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common2/services/delay/delay.h" framework="" version="3.21.0" source="common2\services\delay\delay.h" changed="False" content-id="Atmel.ASF" />
+<<<<<<< HEAD
           <file path="src/ASF/sam0/drivers/extint/extint_callback.c" framework="" version="3.21.0" source="sam0\drivers\extint\extint_callback.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/drivers/extint/extint_callback.h" framework="" version="3.21.0" source="sam0\drivers\extint\extint_callback.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/drivers/extint/extint.h" framework="" version="3.21.0" source="sam0\drivers\extint\extint.h" changed="False" content-id="Atmel.ASF" />
@@ -213,6 +223,8 @@
           <file path="src/ASF/common/services/serial/serial.h" framework="" version="3.21.0" source="common\services\serial\serial.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/utils/stdio/read.c" framework="" version="3.21.0" source="sam0\utils\stdio\read.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/utils/stdio/write.c" framework="" version="3.21.0" source="sam0\utils\stdio\write.c" changed="False" content-id="Atmel.ASF" />
+=======
+>>>>>>> parent of a382cd2... SAMW25 med winc1500 driver
         </files>
         <documentation help="http://asf.atmel.com/docs/3.21.0/common.applications.user_application.sam0_system.user_board.atsamd21g18a/html/index.html" />
         <offline-documentation help="" />
@@ -253,9 +265,7 @@
       <Value>ARM_MATH_CM0=true</Value>
       <Value>I2C_MASTER_CALLBACK_MODE=false</Value>
       <Value>USART_CALLBACK_MODE=false</Value>
-      <Value>EXTINT_CALLBACK_MODE=true</Value>
-      <Value>SPI_CALLBACK_MODE=true</Value>
-      <Value>SYSTICK_MODE</Value>
+      <Value>CYCLE_MODE</Value>
     </ListValues>
   </armgcc.compiler.symbols.DefSymbols>
   <armgcc.compiler.directories.DefaultIncludePath>False</armgcc.compiler.directories.DefaultIncludePath>
@@ -291,11 +301,6 @@
       <Value>../src/ASF/sam0/drivers/sercom/i2c</Value>
       <Value>../src/ASF/sam0/drivers/sercom/i2c/i2c_samd21_r21_d10_d11_l21</Value>
       <Value>../src/ASF/sam0/drivers/sercom/usart</Value>
-      <Value>../src/ASF/sam0/drivers/extint</Value>
-      <Value>../src/ASF/sam0/drivers/extint/extint_sam_d_r</Value>
-      <Value>../src/ASF/sam0/drivers/sercom/spi</Value>
-      <Value>../src/ASF/sam0/utils/stdio/stdio_serial</Value>
-      <Value>../src/ASF/common/services/serial</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize for size (-Os)</armgcc.compiler.optimization.level>
@@ -317,7 +322,11 @@
   </armgcc.linker.libraries.LibrarySearchPaths>
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
   <armgcc.linker.miscellaneous.LinkerFlags>-Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam0/utils/linker_scripts/samd21/gcc/samd21g18a_flash.ld</armgcc.linker.miscellaneous.LinkerFlags>
+<<<<<<< HEAD
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0=true -DBOARD=USER_BOARD -DI2C_MASTER_CALLBACK_MODE=false -DUSART_CALLBACK_MODE=false -DEXTINT_CALLBACK_MODE=true -DSPI_CALLBACK_MODE=true -DSYSTICK_MODE</armgcc.preprocessingassembler.general.AssemblerFlags>
+=======
+  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0=true -DBOARD=USER_BOARD -DI2C_MASTER_CALLBACK_MODE=false -DUSART_CALLBACK_MODE=false -DCYCLE_MODE</armgcc.preprocessingassembler.general.AssemblerFlags>
+>>>>>>> parent of a382cd2... SAMW25 med winc1500 driver
   <armgcc.preprocessingassembler.general.DefaultIncludePath>False</armgcc.preprocessingassembler.general.DefaultIncludePath>
   <armgcc.preprocessingassembler.general.IncludePaths>
     <ListValues>
@@ -351,11 +360,6 @@
       <Value>../src/ASF/sam0/drivers/sercom/i2c</Value>
       <Value>../src/ASF/sam0/drivers/sercom/i2c/i2c_samd21_r21_d10_d11_l21</Value>
       <Value>../src/ASF/sam0/drivers/sercom/usart</Value>
-      <Value>../src/ASF/sam0/drivers/extint</Value>
-      <Value>../src/ASF/sam0/drivers/extint/extint_sam_d_r</Value>
-      <Value>../src/ASF/sam0/drivers/sercom/spi</Value>
-      <Value>../src/ASF/sam0/utils/stdio/stdio_serial</Value>
-      <Value>../src/ASF/common/services/serial</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
 </ArmGcc>
@@ -376,9 +380,7 @@
       <Value>ARM_MATH_CM0=true</Value>
       <Value>I2C_MASTER_CALLBACK_MODE=false</Value>
       <Value>USART_CALLBACK_MODE=false</Value>
-      <Value>EXTINT_CALLBACK_MODE=true</Value>
-      <Value>SPI_CALLBACK_MODE=true</Value>
-      <Value>SYSTICK_MODE</Value>
+      <Value>CYCLE_MODE</Value>
     </ListValues>
   </armgcc.compiler.symbols.DefSymbols>
   <armgcc.compiler.directories.DefaultIncludePath>False</armgcc.compiler.directories.DefaultIncludePath>
@@ -414,11 +416,6 @@
       <Value>../src/ASF/sam0/drivers/sercom/i2c</Value>
       <Value>../src/ASF/sam0/drivers/sercom/i2c/i2c_samd21_r21_d10_d11_l21</Value>
       <Value>../src/ASF/sam0/drivers/sercom/usart</Value>
-      <Value>../src/ASF/sam0/drivers/extint</Value>
-      <Value>../src/ASF/sam0/drivers/extint/extint_sam_d_r</Value>
-      <Value>../src/ASF/sam0/drivers/sercom/spi</Value>
-      <Value>../src/ASF/sam0/utils/stdio/stdio_serial</Value>
-      <Value>../src/ASF/common/services/serial</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
@@ -442,7 +439,7 @@
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
   <armgcc.linker.miscellaneous.LinkerFlags>-Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam0/utils/linker_scripts/samd21/gcc/samd21g18a_flash.ld</armgcc.linker.miscellaneous.LinkerFlags>
   <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
-  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0=true -DBOARD=USER_BOARD -DI2C_MASTER_CALLBACK_MODE=false -DUSART_CALLBACK_MODE=false -DEXTINT_CALLBACK_MODE=true -DSPI_CALLBACK_MODE=true -DSYSTICK_MODE</armgcc.preprocessingassembler.general.AssemblerFlags>
+  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0=true -DBOARD=USER_BOARD -DI2C_MASTER_CALLBACK_MODE=false -DUSART_CALLBACK_MODE=false -DCYCLE_MODE</armgcc.preprocessingassembler.general.AssemblerFlags>
   <armgcc.preprocessingassembler.general.DefaultIncludePath>False</armgcc.preprocessingassembler.general.DefaultIncludePath>
   <armgcc.preprocessingassembler.general.IncludePaths>
     <ListValues>
@@ -476,11 +473,6 @@
       <Value>../src/ASF/sam0/drivers/sercom/i2c</Value>
       <Value>../src/ASF/sam0/drivers/sercom/i2c/i2c_samd21_r21_d10_d11_l21</Value>
       <Value>../src/ASF/sam0/drivers/sercom/usart</Value>
-      <Value>../src/ASF/sam0/drivers/extint</Value>
-      <Value>../src/ASF/sam0/drivers/extint/extint_sam_d_r</Value>
-      <Value>../src/ASF/sam0/drivers/sercom/spi</Value>
-      <Value>../src/ASF/sam0/utils/stdio/stdio_serial</Value>
-      <Value>../src/ASF/common/services/serial</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
   <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
@@ -493,23 +485,15 @@
     <Folder Include="src\ASF\common2\" />
     <Folder Include="src\ASF\common2\boards\" />
     <Folder Include="src\ASF\common2\boards\user_board\" />
-    <Folder Include="src\ASF\common2\boards\user_board\services\" />
-    <Folder Include="src\ASF\common2\boards\user_board\services\delay\" />
-    <Folder Include="src\ASF\common2\boards\user_board\services\delay\sam0\" />
     <Folder Include="src\ASF\common2\services\" />
     <Folder Include="src\ASF\common2\services\delay\" />
     <Folder Include="src\ASF\common2\services\delay\sam0\" />
     <Folder Include="src\ASF\common\" />
     <Folder Include="src\ASF\common\boards\" />
-    <Folder Include="src\ASF\common\services\" />
-    <Folder Include="src\ASF\common\services\serial\" />
-    <Folder Include="src\ASF\common\services\serial\sam0_usart\" />
     <Folder Include="src\ASF\common\utils\" />
     <Folder Include="src\ASF\common\utils\interrupt\" />
     <Folder Include="src\ASF\sam0\" />
     <Folder Include="src\ASF\sam0\drivers\" />
-    <Folder Include="src\ASF\sam0\drivers\extint\" />
-    <Folder Include="src\ASF\sam0\drivers\extint\extint_sam_d_r\" />
     <Folder Include="src\ASF\sam0\drivers\port\" />
     <Folder Include="src\ASF\sam0\drivers\port\quick_start\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\" />
@@ -517,12 +501,6 @@
     <Folder Include="src\ASF\sam0\drivers\sercom\i2c\i2c_samd21_r21_d10_d11_l21\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\i2c\quick_start_master\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\i2c\quick_start_master_dma\" />
-    <Folder Include="src\ASF\sam0\drivers\sercom\spi\" />
-    <Folder Include="src\ASF\sam0\drivers\sercom\spi\quick_start_dma\" />
-    <Folder Include="src\ASF\sam0\drivers\sercom\spi\quick_start_master\" />
-    <Folder Include="src\ASF\sam0\drivers\sercom\spi\quick_start_master_callback\" />
-    <Folder Include="src\ASF\sam0\drivers\sercom\spi\quick_start_slave\" />
-    <Folder Include="src\ASF\sam0\drivers\sercom\spi\quick_start_slave_callback\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\usart\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\usart\quick_start\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\usart\quick_start_dma\" />
@@ -552,8 +530,6 @@
     <Folder Include="src\ASF\sam0\utils\linker_scripts\samd21\gcc\" />
     <Folder Include="src\ASF\sam0\utils\make\" />
     <Folder Include="src\ASF\sam0\utils\preprocessor\" />
-    <Folder Include="src\ASF\sam0\utils\stdio\" />
-    <Folder Include="src\ASF\sam0\utils\stdio\stdio_serial\" />
     <Folder Include="src\ASF\sam0\utils\syscalls\" />
     <Folder Include="src\ASF\sam0\utils\syscalls\gcc\" />
     <Folder Include="src\ASF\thirdparty\" />
@@ -581,78 +557,6 @@
     <Folder Include="src\winc\socket\source" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\ASF\sam0\drivers\extint\extint.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\common2\boards\user_board\services\delay\delay.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\ASF\common2\services\delay\delay.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\common2\services\delay\sam0\systick_counter.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\ASF\common2\services\delay\sam0\systick_counter.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\common\services\serial\sam0_usart\usart_serial.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\common\services\serial\serial.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\sam0\drivers\extint\extint_callback.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\ASF\sam0\drivers\extint\extint_callback.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\sam0\drivers\extint\extint_sam_d_r\extint.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\ASF\sam0\drivers\sercom\sercom_interrupt.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\ASF\sam0\drivers\sercom\sercom_interrupt.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\sam0\drivers\sercom\spi\quick_start_dma\qs_spi_dma_use.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\sam0\drivers\sercom\spi\quick_start_master_callback\qs_spi_master_callback.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\sam0\drivers\sercom\spi\quick_start_slave\qs_spi_slave_basic.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\sam0\drivers\sercom\spi\quick_start_slave_callback\qs_spi_slave_callback.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\sam0\drivers\sercom\spi\quick_start_master\qs_spi_master_basic.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\sam0\drivers\sercom\spi\spi.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\ASF\sam0\drivers\sercom\spi\spi.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\sam0\drivers\sercom\spi\spi_interrupt.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\ASF\sam0\drivers\sercom\spi\spi_interrupt.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\sam0\utils\stdio\stdio_serial\stdio_serial.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\sam0\utils\stdio\read.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\ASF\sam0\utils\stdio\write.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\config\conf_extint.h">
       <SubType>compile</SubType>
     </Compile>
@@ -666,9 +570,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\RF430CL330H\RF430CL330H.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\wifi.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\winc\bsp\include\nm_bsp.h">
@@ -770,6 +671,15 @@
     <Compile Include="src\winc\socket\source\socket_internal.h">
       <SubType>compile</SubType>
     </Compile>
+    <None Include="src\ASF\common2\services\delay\delay.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common2\services\delay\sam0\cycle_counter.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common2\services\delay\sam0\cycle_counter.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\sam0\drivers\port\port.c">
       <SubType>compile</SubType>
     </Compile>
