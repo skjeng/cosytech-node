@@ -204,6 +204,8 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 
 int main (void)
 {
+	
+	// broken, locks up at some point
 	tstrWifiInitParam param;
 	int8_t ret;
 	system_init();
