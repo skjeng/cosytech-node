@@ -225,7 +225,7 @@ int main (void)
 	uint8_t ndef_data[] = COSY_DEFAULT_DATA;
 	
 	rf430_init();
-	rf430_write_ndef(ndef_data);
+	rf430_write_ndef(ndef_data, sizeof(ndef));
 	
 	port_pin_set_output_level(PIN_PA02, false);
 
@@ -250,9 +250,6 @@ int main (void)
 
 	/* Request scan. */
 	m2m_wifi_request_scan(M2M_WIFI_CH_ALL);
-
-	
-
 	
 	while(1){
 		/* Handle pending events from network controller. */

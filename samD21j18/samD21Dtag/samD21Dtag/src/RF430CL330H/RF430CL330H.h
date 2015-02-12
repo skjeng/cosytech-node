@@ -148,7 +148,7 @@
 	\
 	/* 'Hello, world!' NDEF data; Empty NDEF message, length should match NLEN*/            \
 	/* 'Sigvart Hovland!' NDEF data; Empty NDEF message, length should match NLEN 0x74, 0x20, 0x48, 0x6f, 0x76, 0x6c, 0x61, 0x64, 0x6e, */ \
-	0x53, 0x69, 0x67, 0x76, 0x61, 0x72, 0x74, 0x21, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20          \
+	0x58, 0x69, 0x67, 0x76, 0x61, 0x72, 0x74, 0x21, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20          \
 }
 
 const struct R430_I2C{
@@ -158,6 +158,8 @@ const struct R430_I2C{
 uint16_t rf430_i2c_read_register(uint16_t reg_addr);
 void rf430_i2c_write_register(uint16_t reg_addr, uint16_t val);
 void rf430_i2c_write_continous(uint16_t reg_addr, uint8_t* write_data, uint16_t data_length);
+void rf430_i2c_write_ndef(uint8_t *NDEF_Application_Data, uint16_t length);
 void rf430_i2c_config(void);
+
 
 #endif /* RF430CL330H_H_ */

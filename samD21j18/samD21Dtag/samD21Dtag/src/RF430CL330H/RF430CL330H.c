@@ -6,7 +6,24 @@
  */ 
 
 #include <asf.h>
+#include <stdio_serial.h>
 #include <RF430CL330H/RF430CL330H.h>
+
+//static struct usart_module cdc_uart_module;
+
+/* static void configure_console(void)
+{
+	struct usart_config usart_conf;
+	usart_conf.baudrate    = 9600;
+	usart_conf.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING; //USART_RX_1_TX_0_XCK_1
+	usart_conf.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0; //PINMUX_PA22C_SERCOM3_PAD0
+	usart_conf.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1; //PINMUX_PA23C_SERCOM3_PAD1
+	usart_conf.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2; //PINMUX_UNUSED
+	usart_conf.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3; //PINMUX_UNUSED
+	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &usart_conf);
+	usart_enable(&cdc_uart_module);
+}*/
+
 
 void configure_i2c_master(void);
 
@@ -170,14 +187,25 @@ void rf430_i2c_config(void){
 		rf430_i2c_write_register(TEST_MODE_REG, 0);
 	}
 	
-	uint8_t NDEF_Application_Data[] = COSY_DEFAULT_DATA;
-	
-	rf430_i2c_write_continous(0, NDEF_Application_Data, sizeof(NDEF_Application_Data));
-
 	//Enable interrupts for End of Read and End of Write
 	rf430_i2c_write_register(INT_ENABLE_REG, EOW_INT_ENABLE + EOR_INT_ENABLE);
 
 	//Configure INTO pin for active low and enable RF
 	rf430_i2c_write_register(CONTROL_REG, (INT_ENABLE + INTO_DRIVE + RF_ENABLE) );
 	
+}
+void rf430_i2c_write_ndef(uint8_t *NDEF_Application_Data, uint16_t length){
+	
+	//configure_console();
+	
+	//printf("Found %x \r\n", NDEF_Application_Data);
+	rf430_i2c_write_register(INT_ENABLE_REG, rf430_i2c_read_register(CONTROL_REG) | ~EOR_INT_ENABLE);
+	
+	rf430_i2c_write_continous(0, NDEF_Application_Data, length);
+
+	//Enable interrupts for End of Read and End of Write
+	rf430_i2c_write_register(INT_ENABLE_REG, EOW_INT_ENABLE + EOR_INT_ENABLE);
+
+	//Configure INTO pin for active low and enable RF
+	rf430_i2c_write_register(CONTROL_REG, (INT_ENABLE + INTO_DRIVE + RF_ENABLE) );
 }

@@ -286,7 +286,10 @@ int main (void)
 	
 	usart_write_buffer_wait(&usart_instance, "Reset done\n\r", sizeof("Reset done\n\r"));
 	
+	uint8_t data[] = COSY_DEFAULT_DATA;
+	
 	rf430_i2c_config();
+	rf430_i2c_write_ndef(data, sizeof(data));
 
 
 	system_interrupt_enable_global(); // is this needed why?

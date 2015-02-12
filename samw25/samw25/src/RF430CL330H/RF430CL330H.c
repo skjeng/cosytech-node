@@ -163,17 +163,24 @@ void rf430_init(void){
 		rf430_i2c_write_register(TEST_MODE_REG, 0);
 		
 	}
-}
-
-void rf430_write_ndef(uint8_t NDEF_Application_Data[]){
-	//uint8_t NDEF_Application_Data[] = COSY_DEFAULT_DATA;
-	
-	rf430_i2c_write_continous(0, NDEF_Application_Data, sizeof(NDEF_Application_Data));
-	
+		
 	//Enable interrupts for End of Read and End of Write
 	rf430_i2c_write_register(INT_ENABLE_REG, EOW_INT_ENABLE + EOR_INT_ENABLE);
 
 	//Configure INTO pin for active low and enable RF
 	rf430_i2c_write_register(CONTROL_REG, (INT_ENABLE + INTO_DRIVE + RF_ENABLE));
+}
+
+void rf430_write_ndef(uint8_t *NDEF_Application_Data, uint16_t length){
+
+	rf430_i2c_write_register(INT_ENABLE_REG, rf430_i2c_read_register(CONTROL_REG) | ~EOR_INT_ENABLE);
+	
+	rf430_i2c_write_continous(0, NDEF_Application_Data, length);
+
+	//Enable interrupts for End of Read and End of Write
+	rf430_i2c_write_register(INT_ENABLE_REG, EOW_INT_ENABLE + EOR_INT_ENABLE);
+
+	//Configure INTO pin for active low and enable RF
+	rf430_i2c_write_register(CONTROL_REG, (INT_ENABLE + INTO_DRIVE + RF_ENABLE) );
 }
 
