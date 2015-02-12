@@ -30,6 +30,7 @@
         <options>
           <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
 <<<<<<< HEAD
+<<<<<<< HEAD
           <option id="common2.services.delay" value="Add" config="systick" content-id="Atmel.ASF" />
           <option id="sam0.drivers.extint" value="Add" config="callback" content-id="Atmel.ASF" />
           <option id="sam0.drivers.port" value="Add" config="" content-id="Atmel.ASF" />
@@ -40,12 +41,17 @@
           <option id="sam0.drivers.system.clock" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam0.utils.stdio.stdio_serial" value="Add" config="" content-id="Atmel.ASF" />
 =======
+=======
+>>>>>>> parent of a382cd2... SAMW25 med winc1500 driver
           <option id="sam0.drivers.port" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam0.drivers.sercom.i2c.master" value="Add" config="polled" content-id="Atmel.ASF" />
           <option id="sam0.drivers.sercom.usart" value="Add" config="polled" content-id="Atmel.ASF" />
           <option id="sam0.drivers.system" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam0.drivers.system.clock" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common2.services.delay" value="Add" config="cycle" content-id="Atmel.ASF" />
+<<<<<<< HEAD
+>>>>>>> parent of a382cd2... SAMW25 med winc1500 driver
+=======
 >>>>>>> parent of a382cd2... SAMW25 med winc1500 driver
           <option id="sam0.utils.linker_scripts" value="Add" config="" content-id="Atmel.ASF" />
         </options>
@@ -201,6 +207,7 @@
           <file path="src/ASF/common2/services/delay/sam0/cycle_counter.h" framework="" version="3.21.0" source="common2\services\delay\sam0\cycle_counter.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common2/services/delay/delay.h" framework="" version="3.21.0" source="common2\services\delay\delay.h" changed="False" content-id="Atmel.ASF" />
 <<<<<<< HEAD
+<<<<<<< HEAD
           <file path="src/ASF/sam0/drivers/extint/extint_callback.c" framework="" version="3.21.0" source="sam0\drivers\extint\extint_callback.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/drivers/extint/extint_callback.h" framework="" version="3.21.0" source="sam0\drivers\extint\extint_callback.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/drivers/extint/extint.h" framework="" version="3.21.0" source="sam0\drivers\extint\extint.h" changed="False" content-id="Atmel.ASF" />
@@ -223,6 +230,8 @@
           <file path="src/ASF/common/services/serial/serial.h" framework="" version="3.21.0" source="common\services\serial\serial.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/utils/stdio/read.c" framework="" version="3.21.0" source="sam0\utils\stdio\read.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/utils/stdio/write.c" framework="" version="3.21.0" source="sam0\utils\stdio\write.c" changed="False" content-id="Atmel.ASF" />
+=======
+>>>>>>> parent of a382cd2... SAMW25 med winc1500 driver
 =======
 >>>>>>> parent of a382cd2... SAMW25 med winc1500 driver
         </files>
@@ -323,7 +332,11 @@
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
   <armgcc.linker.miscellaneous.LinkerFlags>-Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam0/utils/linker_scripts/samd21/gcc/samd21g18a_flash.ld</armgcc.linker.miscellaneous.LinkerFlags>
 <<<<<<< HEAD
+<<<<<<< HEAD
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0=true -DBOARD=USER_BOARD -DI2C_MASTER_CALLBACK_MODE=false -DUSART_CALLBACK_MODE=false -DEXTINT_CALLBACK_MODE=true -DSPI_CALLBACK_MODE=true -DSYSTICK_MODE</armgcc.preprocessingassembler.general.AssemblerFlags>
+=======
+  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0=true -DBOARD=USER_BOARD -DI2C_MASTER_CALLBACK_MODE=false -DUSART_CALLBACK_MODE=false -DCYCLE_MODE</armgcc.preprocessingassembler.general.AssemblerFlags>
+>>>>>>> parent of a382cd2... SAMW25 med winc1500 driver
 =======
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0=true -DBOARD=USER_BOARD -DI2C_MASTER_CALLBACK_MODE=false -DUSART_CALLBACK_MODE=false -DCYCLE_MODE</armgcc.preprocessingassembler.general.AssemblerFlags>
 >>>>>>> parent of a382cd2... SAMW25 med winc1500 driver
