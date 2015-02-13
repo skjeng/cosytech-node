@@ -31,7 +31,7 @@
 #include <asf.h>
 #include <RF430CL330H/RF430CL330H.h>
 
-#define _RESET PIN_PB11
+
 
 void configure_port_pins(void);
 void configure_usart(void);
@@ -48,7 +48,6 @@ void configure_port_pins(void){
 	config_port_pin.input_pull = PORT_PIN_PULL_NONE;
 	
 	port_pin_set_config(PIN_PA02, &config_port_pin);
-	port_pin_set_config(_RESET, &config_port_pin);
 }
 
 
@@ -77,7 +76,7 @@ void configure_usart(void){
 	config_usart.pinmux_pad1 = PINMUX_PA13C_SERCOM2_PAD1;
 	config_usart.pinmux_pad2 = PINMUX_UNUSED;
 	config_usart.pinmux_pad3 = PINMUX_UNUSED;
-	
+	 
 	while(usart_init(&usart_instance,SERCOM2, &config_usart) != STATUS_OK) {}
 	
 	usart_enable(&usart_instance);
@@ -96,18 +95,13 @@ int main (void)
 	uint8_t string[] = "Testing usart\n";
 	
 	usart_write_buffer_wait(&usart_instance, string,sizeof(string));
-	port_pin_set_output_level(_RESET, 1);
-	port_pin_set_output_level(_RESET, 0);
-	delay_ms(100);
-	port_pin_set_output_level(_RESET, 1);
-	delay_ms(1000);
 	
 	port_pin_set_output_level(PIN_PA02, !false);
 	
 	uint8_t ndef_data[] = COSY_DEFAULT_DATA;
 	
 	rf430_init();
-	rf430_write_ndef(ndef_data);
+	rf430_write_ndef(ndef_data, sizeof(ndef_data));
 	
 	port_pin_set_output_level(PIN_PA02, false);
 
@@ -116,7 +110,6 @@ int main (void)
 	//example application with cosytech data. (This data should be fetched from web/bluetooth)
 	
 
-	
 	while(1){
 		delay_ms(500);
 		port_pin_set_output_level(PIN_PA02, true);
